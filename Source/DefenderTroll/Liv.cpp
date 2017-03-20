@@ -43,10 +43,10 @@ void ALiv::Tick( float DeltaTime )
 	}
 	else
 	{
-		for (int i = 30; i >= 0; i--)
+		/*for (int i = 30; i >= 0; i--)
 		{
 			CoinReference = Cast<ACoin>(NumberOfCoins[i]);
-		}
+		}*/
 		UE_LOG(LogTemp, Warning, TEXT("Liv didn't find a coin"));
 	}
 
