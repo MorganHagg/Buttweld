@@ -12,7 +12,8 @@ UCLASS()
 class DEFENDERTROLL_API ADefenderTrollGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-
+	
+	
 	
 	
 };

@@ -3,8 +3,7 @@
 #include "DefenderTroll.h"
 #include "LitenViking.h"
 #include "Marve.h"
-#include "Coin.h"
-#include "Liv.h"
+
 
 // Sets default values
 ALitenViking::ALitenViking()
@@ -26,12 +25,6 @@ void ALitenViking::BeginPlay()
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("Enemy Spawned"));
 
-
-	// Finds all instances of Liv, and sets the "LivReference" to the first ([0]) actor found
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALiv::StaticClass(), FoundActors);
-	LivReference = Cast<ALiv>(FoundActors[0]);
-
 }
 
 // Called every frame
@@ -40,36 +33,13 @@ void ALitenViking::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// Rotates the viking to Marves location
-	//RotateToMarve();
-
-	// Rotates the viking to Livs location
-	RotateToLiv();
+	RotateToMarve();
 	FVector NewLocation = GetActorLocation();
 	NewLocation += (MoveDirection * Speed * DeltaTime);
 	SetActorLocation(NewLocation);
 
-	MoveDirection = LivReference->GetActorLocation() - GetActorLocation();
+	MoveDirection = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation() - GetActorLocation();
 	MoveDirection.Normalize();
-}
-
-
-//GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation()
-void ALitenViking::RotateToLiv()
-{
-	FVector LivLocation = LivReference->GetActorLocation();
-	FHitResult Hit;
-	bool HitResult = false;
-
-	if (LivReference)
-	{
-		FVector CursorLocation = Hit.Location;
-		FVector TempLocation = FVector(LivLocation.X, LivLocation.Y, 00.f);
-		FVector NewDirection = TempLocation - GetActorLocation();
-		NewDirection.Z = 0.f;
-		NewDirection.Normalize();
-		SetActorRotation(NewDirection.Rotation());
-	}
-
 }
 
 void ALitenViking::RotateToMarve()
@@ -89,33 +59,5 @@ void ALitenViking::RotateToMarve()
 		NewDirection.Normalize();
 		SetActorRotation(NewDirection.Rotation());
 	}
-
-}
-
-void ALitenViking::HitByRock()
-{
-	
-	// Spawn of coin shall later be under Death();
-	UWorld* World = GetWorld();
-	if (World)
-	{
-		FVector Location = GetActorLocation();
-		UE_LOG(LogTemp, Warning, TEXT("Coin spawned"));
-		World->SpawnActor<ACoin>(Coin_BP, Location, FRotator::ZeroRotator);
-	}
-	Destroy();
-	
-	
-	/* If (health == 0)
-	{
-		Death();
-	}
-	*/
-}
-
-void ALitenViking::Death()
-{
-	//Destroy();
-	//GetWorld()->SpawnActor<ACoin>(Coin_BP, GetActorLocation());
 
 }

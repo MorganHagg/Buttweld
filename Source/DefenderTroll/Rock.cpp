@@ -14,7 +14,7 @@ ARock::ARock()
 	// Defines hitbox
 	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
 
-	// Defines visible component of Rocks
+	// Defines visible component of Bullets
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
 
@@ -43,7 +43,6 @@ void ARock::BeginPlay()
 	}
 
 
-	// Calculates the distance between spawnpoint and cursor location at spawn-time
 	FHitResult Hit;
 	FVector CursorLocation;
 	bool HitResult = false;
@@ -101,10 +100,8 @@ void ARock::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAct
 {
 	if (OtherActor->IsA(ALitenViking::StaticClass()))
 	{
-		Cast<ALitenViking>(OtherActor)->HitByRock();
+		OtherActor->Destroy();
 		Destroy();
-		
 	}
-
 
 }

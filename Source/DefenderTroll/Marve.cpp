@@ -4,7 +4,7 @@
 #include "Marve.h"
 #include "Rock.h"
 #include "LitenViking.h"
-#include "Coin.h"
+
 
 
 // Sets default values
@@ -35,8 +35,6 @@ AMarve::AMarve()
 	}
 	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
-
-	bUseControllerRotationYaw = false;
 }
 
 // Called when the game starts or when spawned
@@ -47,11 +45,10 @@ void AMarve::BeginPlay()
 	GetWorld()->GetFirstPlayerController()->SetViewTarget(CameraOne);
 
 	// Show windows-cursor ingame
-	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
+	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
 
 	UWorld* World = GetWorld();
-	
-	CoinAmmount = 0;
+
 
 
 	///Setter opp kollisjonstesting
@@ -140,7 +137,8 @@ void AMarve::Throw()
 	// Todo: Add "ammo"
 	if (World)
 	{
-		GetWorld()->SpawnActor<ARock>(Rock_BP, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+		GetWorld()->SpawnActor<ARock>(Rock_BP, GetActorLocation() + GetActorForwardVector() * 100.f,
+			GetActorRotation());
 		//Ammo--;
 	}
 }
@@ -160,17 +158,11 @@ void AMarve::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 {
 	if (OtherActor->IsA(ALitenViking::StaticClass()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Died")) Died = true;
+		UE_LOG(LogTemp, Warning, TEXT("Player Died"))
+			Died = true;
 		this->SetActorHiddenInGame(true);
 		UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
-
-	if (OtherActor->IsA(ACoin::StaticClass()))
-	{
-		OtherActor->Destroy();
-		CoinAmmount++;
-	}
-
 
 	// TODO: Make "rock-ammo" with the code under
 	//if (OtherActor->IsA(AClip::StaticClass()))

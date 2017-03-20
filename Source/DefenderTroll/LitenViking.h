@@ -3,7 +3,6 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "Liv.h"
 #include "LitenViking.generated.h"
 
 UCLASS()
@@ -24,26 +23,15 @@ public:
 	// Defines visible properties for Liten Viking
 	UPROPERTY(EditAnywhere)
 		USceneComponent* OurVisibleComponent;
-
-	UPROPERTY(EditAnywhere, Category = "Spawning")
-		TSubclassOf<class ACoin> Coin_BP;
 	
 	// Defines direction for Vikings
 	FVector MoveDirection = FVector(1.f, 0.f, 0.f);
 
 	virtual void RotateToMarve();
-	virtual void RotateToLiv();
-
-	virtual void HitByRock();
-
-	virtual void Death();
-
-	ALiv* LivReference;
 
 private:
 	// Defines the movement speed of Vikings
 	UPROPERTY(EditAnywhere)
 		float Speed = 150.f;
-
 
 };

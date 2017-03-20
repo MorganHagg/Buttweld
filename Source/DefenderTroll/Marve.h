@@ -27,8 +27,6 @@ public:
 	void Move_YAxis(float AxisValue);
 	void Throw();
 
-	int CoinAmmount;
-
 	// Rotates Marve towards cursor rotation
 	virtual void RotateWithMouse();
 
