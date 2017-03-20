@@ -29,7 +29,7 @@ void ACoin::BeginPlay()
 	Super::BeginPlay();
 	// TODO: Fiks så man kan sende NumberOfCoins arrayen til Liv.cpp
 	//NumberOfCoins.Add(this);
-
+	// This line is penis
 	UE_LOG(LogTemp, Warning, TEXT("Spawned coin at %s - The actual location"), *GetActorLocation().ToString());
 
 }
