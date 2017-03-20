@@ -33,7 +33,7 @@ public:
 	ACoin* CoinReference;
 
 	// Del av Bevegelses funksjon som er kommentert ut
-	//TArray<AActor*> FoundActors;
+	// TArray<AActor*> FoundActors;
 private:
 	UPROPERTY(EditAnywhere)
 		float Speed = 150.f;
