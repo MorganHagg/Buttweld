@@ -18,7 +18,7 @@ ACoin::ACoin()
 	OurVisibleComponent->SetupAttachment(RootComponent);*/
 
 	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CoinSphere"));
-	RootSphere->SetSphereRadius(80.f);
+	//RootSphere->SetSphereRadius(80.f);
 	RootComponent = RootSphere;
 	RootSphere->bGenerateOverlapEvents = true;
 }
@@ -29,7 +29,7 @@ void ACoin::BeginPlay()
 	Super::BeginPlay();
 	// TODO: Fiks så man kan sende NumberOfCoins arrayen til Liv.cpp
 	//NumberOfCoins.Add(this);
-	UE_LOG(LogTemp, Warning, TEXT("Spawned coin at %s - The actual location"), *GetActorLocation().ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Spawned coin at %s"), *GetActorLocation().ToString());
 
 }
 
@@ -40,4 +40,7 @@ void ACoin::Tick(float DeltaTime)
 
 }
 
-
+void ACoin::ReportPosition()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Liv picked a coin at %s"), *GetActorLocation().ToString());
+}

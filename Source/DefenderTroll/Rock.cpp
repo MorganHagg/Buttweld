@@ -102,9 +102,6 @@ void ARock::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAct
 	if (OtherActor->IsA(ALitenViking::StaticClass()))
 	{
 		Cast<ALitenViking>(OtherActor)->HitByRock();
-		Destroy();
-		
+		Destroy();		
 	}
-
-
 }

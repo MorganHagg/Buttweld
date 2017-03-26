@@ -20,6 +20,8 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	virtual void ReportPosition();
+
 	/**The collision shape of the clip*/
 	UPROPERTY(EditAnywhere) USphereComponent* RootSphere = nullptr;
 

@@ -165,11 +165,11 @@ void AMarve::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 		UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
 
-	if (OtherActor->IsA(ACoin::StaticClass()))
-	{
-		OtherActor->Destroy();
-		CoinAmmount++;
-	}
+	//if (OtherActor->IsA(ACoin::StaticClass()))
+	//{
+	//	OtherActor->Destroy();
+	//	CoinAmmount++;
+	//}
 
 
 	// TODO: Make "rock-ammo" with the code under

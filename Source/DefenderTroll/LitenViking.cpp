@@ -28,6 +28,7 @@ void ALitenViking::BeginPlay()
 
 
 	// Finds all instances of Liv, and sets the "LivReference" to the first ([0]) actor found
+	// TODO Lage en For-loop som leter etter liv, i tilfelle liv (av en grunn) ikke er [0]
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALiv::StaticClass(), FoundActors);
 	LivReference = Cast<ALiv>(FoundActors[0]);
@@ -53,7 +54,7 @@ void ALitenViking::Tick(float DeltaTime)
 }
 
 
-//GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation()
+
 void ALitenViking::RotateToLiv()
 {
 	FVector LivLocation = LivReference->GetActorLocation();
