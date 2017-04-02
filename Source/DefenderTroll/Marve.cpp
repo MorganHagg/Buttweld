@@ -4,6 +4,7 @@
 #include "Marve.h"
 #include "Rock.h"
 #include "LitenViking.h"
+#include "Melee.h"
 #include "Coin.h"
 
 
@@ -15,7 +16,7 @@ AMarve::AMarve()
 	// Set the pawn to be controlled by player 1
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-	//// Defines the hitbox of Marve
+	/// Defines the hitbox of Marve
 	RootComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("MySphere"));
 
 	// Defines the visible component of the hitbox
@@ -49,6 +50,8 @@ void AMarve::BeginPlay()
 	// Show windows-cursor ingame
 	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
 
+	GetWorld()->SpawnActor<AMelee>(Melee_BP, GetActorLocation(), FRotator::ZeroRotator);
+
 	UWorld* World = GetWorld();
 	
 	CoinAmmount = 0;
@@ -56,7 +59,6 @@ void AMarve::BeginPlay()
 
 	///Setter opp kollisjonstesting
 	CollisionBox = this->FindComponentByClass<UBoxComponent>();
-	//CollisionBox->bGenerateOverlapEvents = true;
 
 	if (CollisionBox)
 	{

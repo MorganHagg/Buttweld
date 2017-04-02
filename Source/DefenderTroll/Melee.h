@@ -3,53 +3,42 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "Coin.h"
-#include "Marve.h"
-#include "Liv.generated.h"
+#include "Melee.generated.h"
 
 UCLASS()
-class DEFENDERTROLL_API ALiv : public AActor
+class DEFENDERTROLL_API AMelee : public AActor
 {
 	GENERATED_BODY()
-
-public:
+	
+public:	
 	// Sets default values for this actor's properties
-	ALiv();
+	AMelee();
 
-	// Defines visible properties for Liv
+	// Initialising for collision and overlap
+
 	UPROPERTY(EditAnywhere)
 		USceneComponent* OurVisibleComponent;
-
-	// Defines direction for Vikings
-	FVector MoveDirection = FVector(1.f, 0.f, 0.f);
+	UShapeComponent* CollisionBox = nullptr;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 	// Called every frame
-	virtual void Tick(float DeltaSeconds) override;
-
-	virtual void RotateToCoin();
-
-	ACoin* CoinReference;
-	TArray<AActor*> FoundActors;
-
-	bool CoinExist = false;
-	bool Died = false;
-
-	int NumberOfCoins;
-
-	// Initialising for collision and overlap
-	UShapeComponent* CollisionBox = nullptr;
+	virtual void Tick( float DeltaSeconds ) override;
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent,
 			AActor *OtherActor, UPrimitiveComponent *OtherComponent,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
-	// Del av Bevegelses funksjon som er kommentert ut
-
 private:
+
 	UPROPERTY(EditAnywhere)
-		float Speed = 150.f;
+		float MeleeRange = 100.0f;
+
+	FVector CurrentPosition;
+	FVector FrontOfMarve;
+	FRotator CurrentRotation;
+	FVector CurrentVector;
+	
 };

@@ -95,7 +95,7 @@ void ARock::Tick(float DeltaTime)
 
 }
 
-//Checks to see if there is overlapping between Bullet and Alien
+//Checks to see if there is overlapping between Bullet and Enemy
 void ARock::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {

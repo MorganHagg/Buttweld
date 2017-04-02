@@ -22,11 +22,9 @@ public:
 
 	virtual void ReportPosition();
 
-	/**The collision shape of the clip*/
-	UPROPERTY(EditAnywhere) USphereComponent* RootSphere = nullptr;
-
-	// Make editable anywhere
-	UPROPERTY(EditAnywhere) USceneComponent* OurVisibleComponent;
+	/**The collision shape of the coin*/
+	UPROPERTY(EditAnywhere)
+		USphereComponent* CollisionBox = nullptr;
 
 	static TArray<AActor*> NumberOfCoins;
 	
