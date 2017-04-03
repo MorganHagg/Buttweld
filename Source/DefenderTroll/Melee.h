@@ -16,9 +16,10 @@ public:
 
 	// Initialising for collision and overlap
 
+	UShapeComponent* CollisionBox = nullptr;
+
 	UPROPERTY(EditAnywhere)
 		USceneComponent* OurVisibleComponent;
-	UShapeComponent* CollisionBox = nullptr;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,7 +36,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		float MeleeRange = 100.0f;
-
+	float DistanceTraveled;
+	UPROPERTY(EditAnywhere)
+		float Speed = 4000.f;
 	FVector CurrentPosition;
 	FVector FrontOfMarve;
 	FRotator CurrentRotation;

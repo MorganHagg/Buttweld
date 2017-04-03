@@ -130,8 +130,7 @@ void AMarve::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	InputComponent->BindAxis("Move_X", this, &AMarve::Move_XAxis);
 	InputComponent->BindAxis("Move_Y", this, &AMarve::Move_YAxis);
 	InputComponent->BindAction("Throw", IE_Pressed, this, &AMarve::Throw);
-
-
+	InputComponent->BindAction("Attack", IE_Pressed, this, &AMarve::Attack);
 }
 
 void AMarve::Throw()
@@ -147,14 +146,23 @@ void AMarve::Throw()
 	}
 }
 
+void AMarve::Attack()
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		GetWorld()->SpawnActor<AMelee>(Melee_BP, GetActorLocation() + GetActorForwardVector(), GetActorRotation());
+	}
+}
+
 void AMarve::Move_XAxis(float AxisValue)
 {
-	CurrentVelocity.X = FMath::Clamp(AxisValue, -1.0f, 1.0f)*400.0f;
+	CurrentVelocity.X = FMath::Clamp(AxisValue, -1.0f, 1.0f) * Speed;
 }
 
 void AMarve::Move_YAxis(float AxisValue)
 {
-	CurrentVelocity.Y = FMath::Clamp(AxisValue, -1.0f, 1.0f)*400.0f;
+	CurrentVelocity.Y = FMath::Clamp(AxisValue, -1.0f, 1.0f) * Speed;
 }
 
 void AMarve::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent,
@@ -162,9 +170,9 @@ void AMarve::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 {
 	if (OtherActor->IsA(ALitenViking::StaticClass()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Died")) Died = true;
-		this->SetActorHiddenInGame(true);
-		UGameplayStatics::SetGamePaused(GetWorld(), true);
+		UE_LOG(LogTemp, Warning, TEXT("Viking is on Marve"));
+		//this->SetActorHiddenInGame(true);
+		//UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
 
 	//if (OtherActor->IsA(ACoin::StaticClass()))
@@ -182,6 +190,3 @@ void AMarve::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 	//		OtherActor->Destroy();
 	//}
 }
-
-
-// TODO: Determin what happens if Marve dies

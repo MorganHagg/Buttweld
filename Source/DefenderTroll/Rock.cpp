@@ -3,6 +3,7 @@
 #include "DefenderTroll.h"
 #include "Rock.h"
 #include "LitenViking.h"
+#include "StorViking.h"
 
 
 // Sets default values
@@ -103,5 +104,10 @@ void ARock::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAct
 	{
 		Cast<ALitenViking>(OtherActor)->HitByRock();
 		Destroy();		
+	}
+	if (OtherActor->IsA(AStorViking::StaticClass()))
+	{
+		Cast<AStorViking>(OtherActor)->HitByRock();
+		Destroy();
 	}
 }

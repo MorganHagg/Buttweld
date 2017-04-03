@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "DefenderTroll.h"
-#include "LitenViking.h"
+#include "StorViking.h"
 #include "Marve.h"
 #include "Coin.h"
 #include "Liv.h"
 
 // Sets default values
-ALitenViking::ALitenViking()
+AStorViking::AStorViking()
 {
 	// Hitbox
 	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
@@ -21,7 +21,7 @@ ALitenViking::ALitenViking()
 }
 
 // Called when the game starts or when spawned
-void ALitenViking::BeginPlay()
+void AStorViking::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("Enemy Spawned"));
@@ -35,7 +35,7 @@ void ALitenViking::BeginPlay()
 }
 
 // Called every frame
-void ALitenViking::Tick(float DeltaTime)
+void AStorViking::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -54,7 +54,7 @@ void ALitenViking::Tick(float DeltaTime)
 
 
 
-void ALitenViking::RotateToLiv()
+void AStorViking::RotateToLiv()
 {
 	FVector LivLocation = LivReference->GetActorLocation();
 	FHitResult Hit;
@@ -72,7 +72,7 @@ void ALitenViking::RotateToLiv()
 
 }
 
-void ALitenViking::RotateToMarve()
+void AStorViking::RotateToMarve()
 {
 	FVector PlayerLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 	FHitResult Hit;
@@ -92,21 +92,21 @@ void ALitenViking::RotateToMarve()
 
 }
 
-void ALitenViking::HitByRock()
-{	
+void AStorViking::HitByRock()
+{
 	// Spawn of coin shall later be under Death();
 	UWorld* World = GetWorld();
 	if (Health > 0)
 	{
 		Health = Health - DamageByRock;
 	}
-	 if (Health <= 0)
+	if (Health < 1)
 	{
-		 Death();
+		Death();
 	}
-	
+
 }
-void ALitenViking::HitByMelee()
+void AStorViking::HitByMelee()
 {
 	// Spawn of coin shall later be under Death();
 	UWorld* World = GetWorld();
@@ -114,14 +114,14 @@ void ALitenViking::HitByMelee()
 	{
 		Health = Health - DamageByMelee;
 	}
-	if(Health < 1)
+	if (Health < 1)
 	{
 		Death();
 	}
 
 }
 
-void ALitenViking::Death()
+void AStorViking::Death()
 {
 	FVector Location = GetActorLocation();
 	UE_LOG(LogTemp, Warning, TEXT("Coin spawned"));

@@ -52,8 +52,7 @@ void ALiv::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FVector NewLocation = GetActorLocation();
-	NewLocation += (MoveDirection * Speed * DeltaTime);
-	SetActorLocation(NewLocation);
+
 	// Finds all instances of Coin
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACoin::StaticClass(), FoundActors);
 	NumberOfCoins = FoundActors.Num();
@@ -77,11 +76,15 @@ void ALiv::Tick(float DeltaTime)
 	if (CoinExist == true)
 	{
 		RotateToCoin();
+		NewLocation += (MoveDirection * Speed * DeltaTime);
+		SetActorLocation(NewLocation);
 		MoveDirection = CoinReference->GetActorLocation() - GetActorLocation();
 		MoveDirection.Normalize();
 	}
 	else
 	{
+		NewLocation += (MoveDirection * Speed * DeltaTime);
+		SetActorLocation(NewLocation);
 		MoveDirection = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation() - GetActorLocation();
 		MoveDirection.Normalize();
 	}

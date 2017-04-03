@@ -26,6 +26,7 @@ public:
 	void Move_XAxis(float AxisValue);
 	void Move_YAxis(float AxisValue);
 	void Throw();
+	void Attack();
 
 	int CoinAmmount;
 
@@ -65,6 +66,10 @@ public:
 
 	UShapeComponent* CollisionBox = nullptr;
 
+	UPROPERTY(EditAnywhere)
+		float Speed = 200.0f;
 
+	UPROPERTY(EditAnywhere)
+		float MeleeRange = 100.0f;
 
 };

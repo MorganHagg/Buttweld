@@ -3,6 +3,7 @@
 #include "DefenderTroll.h"
 #include "Melee.h"
 #include "LitenViking.h"
+#include "StorViking.h"
 
 
 // Sets default values
@@ -10,13 +11,9 @@ AMelee::AMelee()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	// Defines hitbox
-	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
-
-	// Defines visible component of Rocks
+	RootComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBox"));
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
-
 }
 
 // Called when the game starts or when spawned
@@ -24,13 +21,16 @@ void AMelee::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("Attack is inbound"));
-	CollisionBox = this->FindComponentByClass<USphereComponent>();
-	// Checks if Melee has collided with Enemy
+	CollisionBox = this->FindComponentByClass<UBoxComponent>();
+
 	if (CollisionBox)
 	{
 		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AMelee::OnOverlap);
 	}
-
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
+	}
 }
 
 // Called every frame
@@ -38,14 +38,16 @@ void AMelee::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	CurrentPosition = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-	CurrentRotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
-	CurrentVector = CurrentRotation.Vector();
-	
-	FrontOfMarve = CurrentPosition + (CurrentVector)* MeleeRange;
+	FVector NewLocation = GetActorLocation();
+	NewLocation += GetActorForwardVector() * Speed * DeltaTime;
+	SetActorLocation(NewLocation);
 
-	SetActorLocation(FrontOfMarve);
-	SetActorRotation(CurrentRotation);
+	DistanceTraveled += Speed * DeltaTime;
+
+	if (DistanceTraveled >= MeleeRange)
+	{
+		this->Destroy();
+	}
 }
 
 //Checks to see if there is overlapping between HitBox and Enemy
@@ -54,7 +56,12 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 {
 	if (OtherActor->IsA(ALitenViking::StaticClass()))
 	{
-		Cast<ALitenViking>(OtherActor)->HitByRock();
-		UE_LOG(LogTemp, Warning, TEXT("Hitting viking"));
+		Cast<ALitenViking>(OtherActor)->HitByMelee();
+		Destroy();
+	}
+	if (OtherActor->IsA(AStorViking::StaticClass()))
+	{
+		Cast<AStorViking>(OtherActor)->HitByMelee();
+		Destroy();
 	}
 }

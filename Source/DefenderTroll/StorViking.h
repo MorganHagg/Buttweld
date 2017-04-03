@@ -4,16 +4,16 @@
 
 #include "GameFramework/Actor.h"
 #include "Liv.h"
-#include "LitenViking.generated.h"
+#include "StorViking.generated.h"
 
 UCLASS()
-class DEFENDERTROLL_API ALitenViking : public AActor
+class DEFENDERTROLL_API AStorViking : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ALitenViking();
+	AStorViking();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,7 +27,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class ACoin> Coin_BP;
-	
+
 	// Defines direction for Vikings
 	FVector MoveDirection = FVector(1.f, 0.f, 0.f);
 
@@ -47,11 +47,11 @@ private:
 		float Speed = 150.f;
 
 	UPROPERTY(EditAnywhere)
-		int Health = 100;
+		int Health = 120;
 
 	UPROPERTY(EditAnywhere)
-		int DamageByRock = 70;
+		int DamageByRock = 50;
 
 	UPROPERTY(EditAnywhere)
-		int DamageByMelee = 30;
+		int DamageByMelee = 20;
 };

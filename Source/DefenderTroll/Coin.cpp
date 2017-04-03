@@ -2,7 +2,6 @@
 
 #include "DefenderTroll.h"
 #include "Coin.h"
-#include "Liv.h"
 #include "LitenViking.h"
 
 

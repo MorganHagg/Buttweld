@@ -21,7 +21,10 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		TSubclassOf<class ALitenViking> MyEnemyClass;
+		TSubclassOf<class ALitenViking> LitenVikingEnemy;
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		TSubclassOf<class AStorViking> StorVikingEnemy;
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere = nullptr;
@@ -33,6 +36,13 @@ public:
 	/** Maximum spawn delay */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawning)
 		float SpawnDelayRangeHigh = 5.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawning)
+		int MaxSpawns = 10;
+
+	// TypeSpawner defines what type of mob is spawned. 1 = LitenViking, 2 = StorViking
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawning)
+		int TypeSpawner = 1;
 
 	/** Whether or not spawning is enabled */
 	bool bSpawningEnabled;

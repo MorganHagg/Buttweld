@@ -2,6 +2,7 @@
 
 #include "DefenderTroll.h"
 #include "VikingSpawner.h"
+#include "StorViking.h"
 #include "LitenViking.h"
 
 
@@ -27,7 +28,7 @@ void AVikingSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	numberOfViking = 0;
-	maxNumberOfSpawn = 10;
+	maxNumberOfSpawn = MaxSpawns;
 
 }
 
@@ -56,8 +57,7 @@ void AVikingSpawner::Tick(float DeltaTime)
 
 	if (bShouldSpawn && (numberOfViking < maxNumberOfSpawn))
 	{
-		UWorld* World = GetWorld();
-		if (World)
+		if (TypeSpawner == 1)
 		{
 
 			//Deduct spawn delay from accumulated time value
@@ -68,7 +68,20 @@ void AVikingSpawner::Tick(float DeltaTime)
 			FVector Location = GetActorLocation();
 			UE_LOG(LogTemp, Warning, TEXT("Number of Vikings increases!!"));
 			numberOfViking++;
-			World->SpawnActor<ALitenViking>(MyEnemyClass, Location, FRotator::ZeroRotator);
+			GetWorld()->SpawnActor<ALitenViking>(LitenVikingEnemy, Location, FRotator::ZeroRotator);
+		}
+		if (TypeSpawner == 2)
+		{
+
+			//Deduct spawn delay from accumulated time value
+			SpawnTime -= SpawnDelay;
+
+			SpawnDelay = GetRandomSpawnDelay();
+
+			FVector Location = GetActorLocation();
+			UE_LOG(LogTemp, Warning, TEXT("Number of Vikings increases!!"));
+			numberOfViking++;
+			GetWorld()->SpawnActor<AStorViking>(StorVikingEnemy, Location, FRotator::ZeroRotator);
 		}
 	}
 
