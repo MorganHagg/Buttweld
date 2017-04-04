@@ -17,12 +17,13 @@ AMarve::AMarve()
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	/// Defines the hitbox of Marve
-	RootComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("MySphere"));
+	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("MySphere"));
+	CollisionBox->bGenerateOverlapEvents = true;
+	RootComponent = CollisionBox;
 
 	// Defines the visible component of the hitbox
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
-
 
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");

@@ -64,8 +64,8 @@ public:
 
 	bool Died = false;
 
-	UShapeComponent* CollisionBox = nullptr;
-
+	//UShapeComponent* CollisionBox = nullptr;
+	UBoxComponent* CollisionBox;
 	UPROPERTY(EditAnywhere)
 		float Speed = 200.0f;
 
