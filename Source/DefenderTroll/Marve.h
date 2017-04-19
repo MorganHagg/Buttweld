@@ -26,9 +26,7 @@ public:
 	void Move_XAxis(float AxisValue);
 	void Move_YAxis(float AxisValue);
 	void Throw();
-	void Attack();
-
-	int CoinAmmount;
+	void Lure();
 
 	// Rotates Marve towards cursor rotation
 	virtual void RotateWithMouse();
@@ -38,23 +36,23 @@ public:
 	UPROPERTY(EditAnywhere)
 		USceneComponent* OurVisibleComponent;
 
-	UPROPERTY(EditAnywhere)
-		AActor* CameraOne = nullptr;
-
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class ARock> Rock_BP;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-		TSubclassOf<class AMelee> Melee_BP;
+		TSubclassOf<class ACandy> Candy_BP;
 
 	UPROPERTY(EditAnywhere)
 		float YawSpeed = 0.1f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
-		USceneComponent* CursorMesh = nullptr;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+	//	USceneComponent* CursorMesh = nullptr;
 
 	/** A decal that projects to the cursor location. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	//	class UDecalComponent* CursorToWorld;
+
+	UPROPERTY(EditAnywhere)
 		class UDecalComponent* CursorToWorld;
 
 	UFUNCTION()
@@ -64,8 +62,6 @@ public:
 
 	bool Died = false;
 
-	//UShapeComponent* CollisionBox = nullptr;
-	UBoxComponent* CollisionBox;
 	UPROPERTY(EditAnywhere)
 		float Speed = 200.0f;
 

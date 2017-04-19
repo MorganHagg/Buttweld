@@ -68,9 +68,6 @@ void ARock::BeginPlay()
 
 	FVector CurrentLocation = GetActorLocation();
 
-	ThrowDistance = sqrt(pow((CursorLocation.X - CurrentLocation.X),2) + pow((CursorLocation.Y - CurrentLocation.Y),2));
-	UE_LOG(LogTemp, Error, TEXT("Throw distance %f"), ThrowDistance);
-
 }
 
 
@@ -92,8 +89,6 @@ void ARock::Tick(float DeltaTime)
 		Destroy();
 		UE_LOG(LogTemp, Warning, TEXT("Rock destroyed"));
 	}
-
-
 }
 
 //Checks to see if there is overlapping between Bullet and Enemy

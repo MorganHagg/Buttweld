@@ -4,7 +4,7 @@
 #include "Marve.h"
 #include "Rock.h"
 #include "LitenViking.h"
-#include "Melee.h"
+#include "Candy.h"
 #include "Coin.h"
 
 
@@ -16,26 +16,21 @@ AMarve::AMarve()
 	// Set the pawn to be controlled by player 1
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-	/// Defines the hitbox of Marve
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("MySphere"));
-	CollisionBox->bGenerateOverlapEvents = true;
-	RootComponent = CollisionBox;
-
 	// Defines the visible component of the hitbox
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
 
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
-	CursorToWorld->SetupAttachment(RootComponent);
+	//CursorToWorld->SetupAttachment(RootComponent);
 
 	// TODO: Lag en UPORPERTY som tar in materialet
-	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'Game/Content/Materials/M_Cursor_Decal.M_Cursor_Decal'"));
-	if (DecalMaterialAsset.Succeeded())
-	{
-		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
-	}
-	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
+	//static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'Game/Content/Materials/M_Cursor_Decal.M_Cursor_Decal'"));
+	//if (DecalMaterialAsset.Succeeded())
+	//{
+	//	CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
+	//}
+	//CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 
 	bUseControllerRotationYaw = false;
@@ -45,31 +40,11 @@ AMarve::AMarve()
 void AMarve::BeginPlay()
 {
 	Super::BeginPlay();
-	// Sets the cameraview to CameraOne (Camera above the map)
-	GetWorld()->GetFirstPlayerController()->SetViewTarget(CameraOne);
 
 	// Show windows-cursor ingame
-	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
-
-	GetWorld()->SpawnActor<AMelee>(Melee_BP, GetActorLocation(), FRotator::ZeroRotator);
+	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
 
 	UWorld* World = GetWorld();
-	
-	CoinAmmount = 0;
-
-
-	///Setter opp kollisjonstesting
-	CollisionBox = this->FindComponentByClass<UBoxComponent>();
-
-	if (CollisionBox)
-	{
-		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AMarve::OnOverlap);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
-	}
-
 }
 
 // Called every frame
@@ -111,7 +86,7 @@ void AMarve::RotateWithMouse()
 		//}
 		//else
 		//{
-		//	//UE_LOG(LogTemp, Warning, TEXT("Cursor Mesh not found"));	
+		//	UE_LOG(LogTemp, Warning, TEXT("Cursor Mesh not found"));	
 		//}
 		NewDirection = TempLocation - GetActorLocation();
 		NewDirection.Z = 0.f;
@@ -131,7 +106,7 @@ void AMarve::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	InputComponent->BindAxis("Move_X", this, &AMarve::Move_XAxis);
 	InputComponent->BindAxis("Move_Y", this, &AMarve::Move_YAxis);
 	InputComponent->BindAction("Throw", IE_Pressed, this, &AMarve::Throw);
-	InputComponent->BindAction("Attack", IE_Pressed, this, &AMarve::Attack);
+	InputComponent->BindAction("Lure", IE_Pressed, this, &AMarve::Lure);
 }
 
 void AMarve::Throw()
@@ -147,12 +122,12 @@ void AMarve::Throw()
 	}
 }
 
-void AMarve::Attack()
+void AMarve::Lure()
 {
 	UWorld* World = GetWorld();
 	if (World)
 	{
-		GetWorld()->SpawnActor<AMelee>(Melee_BP, GetActorLocation() + GetActorForwardVector(), GetActorRotation());
+		GetWorld()->SpawnActor<ACandy>(Candy_BP, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 	}
 }
 

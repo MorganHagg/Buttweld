@@ -30,15 +30,19 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void RotateToCoin();
+	virtual void RotateToCandy();
 
 	ACoin* CoinReference;
-	TArray<AActor*> FoundActors;
+	ACandy* CandyReference;
+	TArray<AActor*> FoundCoins;
+	TArray<AActor*> FoundCandy;
 
 	bool CoinExist = false;
+	bool CandyExist = false;
 	bool Died = false;
 
 	int NumberOfCoins;
-
+	int NumberOfCandy;
 	// Initialising for collision and overlap
 	UShapeComponent* CollisionBox = nullptr;
 
@@ -47,7 +51,12 @@ public:
 			AActor *OtherActor, UPrimitiveComponent *OtherComponent,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
-	// Del av Bevegelses funksjon som er kommentert ut
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = NumberOfViking)
+		int32 ScareOMeter = 50;
+	UPROPERTY(EditAnywhere)
+		int32 CalmDown = 10;
+	UPROPERTY(EditAnywhere)
+		int32 ScareValue = 10;
 
 private:
 	UPROPERTY(EditAnywhere)

@@ -31,7 +31,7 @@ void AStorViking::BeginPlay()
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALiv::StaticClass(), FoundActors);
 	LivReference = Cast<ALiv>(FoundActors[0]);
-
+	NumberOfViking++;
 }
 
 // Called every frame
@@ -127,4 +127,5 @@ void AStorViking::Death()
 	UE_LOG(LogTemp, Warning, TEXT("Coin spawned"));
 	GetWorld()->SpawnActor<ACoin>(Coin_BP, Location, FRotator::ZeroRotator);
 	this->Destroy();
+	NumberOfViking --;
 }

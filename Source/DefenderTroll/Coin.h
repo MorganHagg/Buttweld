@@ -20,9 +20,7 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	virtual void ReportPosition();
-
-	/**The collision shape of the coin*/
+	//The collision shape of the coin
 	UPROPERTY(EditAnywhere)
 		USphereComponent* CollisionBox = nullptr;
 

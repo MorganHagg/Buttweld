@@ -30,8 +30,3 @@ void ACoin::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
-void ACoin::ReportPosition()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Liv picked a coin at %s"), *GetActorLocation().ToString());
-}

@@ -40,7 +40,8 @@ public:
 	virtual void Death();
 
 	ALiv* LivReference;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = NumberOfViking)
+		int32 NumberOfViking;
 private:
 	// Defines the movement speed of Vikings
 	UPROPERTY(EditAnywhere)
@@ -54,4 +55,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		int DamageByMelee = 30;
+
+
 };
