@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "Liv.h"
+#include "Coin.h"
 #include "StorViking.generated.h"
 
 UCLASS()
@@ -31,19 +31,23 @@ public:
 	// Defines direction for Vikings
 	FVector MoveDirection = FVector(1.f, 0.f, 0.f);
 
-	virtual void RotateToMarve();
-	virtual void RotateToLiv();
-
+	virtual void RotateToLiv(AActor* LivReference);
 	virtual void HitByRock();
-	virtual void HitByMelee();
-
 	virtual void Death();
 
-	ALiv* LivReference;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = NumberOfViking)
 		int32 NumberOfViking;
 private:
 	// Defines the movement speed of Vikings
+	UPROPERTY(EditAnywhere)
+		float RadiusToLiv;
+
+	UPROPERTY(EditAnywhere)
+		float MinimumRadius = 100.0f;
+
+	UPROPERTY(EditAnywhere)
+		float StandStillMargine = 5.0f;
+
 	UPROPERTY(EditAnywhere)
 		float Speed = 150.f;
 
@@ -53,7 +57,5 @@ private:
 	UPROPERTY(EditAnywhere)
 		int DamageByRock = 50;
 
-	UPROPERTY(EditAnywhere)
-		int DamageByMelee = 20;
-
+	bool CanWalk;
 };

@@ -2,8 +2,6 @@
 
 #include "DefenderTroll.h"
 #include "Rock.h"
-#include "LitenViking.h"
-#include "StorViking.h"
 
 
 // Sets default values
@@ -26,8 +24,7 @@ void ARock::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//Info to Output Log
-	UE_LOG(LogTemp, Warning, TEXT("Spawned Rock"));
+	//UE_LOG(LogTemp, Warning, TEXT("Spawned Rock"));
 
 	//Checks if there is overlap
 	CollisionBox = this->FindComponentByClass<USphereComponent>();
@@ -62,7 +59,7 @@ void ARock::BeginPlay()
 		}
 		
 		CursorLocation = Hit.Location;
-		UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());
+		/*UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());*/
 		RockDestination = FVector(CursorLocation.X, CursorLocation.Y, 00.f);
 	}
 
@@ -87,7 +84,7 @@ void ARock::Tick(float DeltaTime)
 	if (DistanceTraveled >= ThrowDistance)
 	{
 		Destroy();
-		UE_LOG(LogTemp, Warning, TEXT("Rock destroyed"));
+		//UE_LOG(LogTemp, Warning, TEXT("Rock destroyed"));
 	}
 }
 

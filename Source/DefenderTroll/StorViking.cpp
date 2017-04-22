@@ -1,10 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "DefenderTroll.h"
-#include "StorViking.h"
-#include "Marve.h"
-#include "Coin.h"
 #include "Liv.h"
+#include "StorViking.h"
 
 // Sets default values
 AStorViking::AStorViking()
@@ -24,38 +22,45 @@ AStorViking::AStorViking()
 void AStorViking::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Enemy Spawned"));
-
-	// Finds all instances of Liv, and sets the "LivReference" to the first ([0]) actor found
-	// TODO Lage en For-loop som leter etter liv, i tilfelle liv (av en grunn) ikke er [0]
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALiv::StaticClass(), FoundActors);
-	LivReference = Cast<ALiv>(FoundActors[0]);
+	//UE_LOG(LogTemp, Warning, TEXT("Stor Viking Spawned"));
 	NumberOfViking++;
 }
 
 // Called every frame
 void AStorViking::Tick(float DeltaTime)
 {
+	// Finds all instances of Liv, and sets the "LivReference" to the first ([0]) actor found
+	TArray<AActor*> FoundActors;
+	ALiv* LivReference = nullptr;
+	if (LivReference == nullptr)
+	{
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALiv::StaticClass(), FoundActors);
+		LivReference = Cast<ALiv>(FoundActors[0]);
+	}
 	Super::Tick(DeltaTime);
-
-	// Rotates the viking to Marves location
-	//RotateToMarve();
+	FVector NewLocation = GetActorLocation();
+	FVector LivLocation = LivReference->GetActorLocation();
+	RadiusToLiv = sqrt(pow((LivLocation.X - NewLocation.X), 2) + pow((LivLocation.Y - NewLocation.Y), 2));
 
 	// Rotates the viking to Livs location
-	RotateToLiv();
-	FVector NewLocation = GetActorLocation();
-	NewLocation += (MoveDirection * Speed * DeltaTime);
+	RotateToLiv(LivReference);
+	if (RadiusToLiv < MinimumRadius)
+	{
+		CanWalk = false;
+	}
+	else
+	{
+		CanWalk = true;
+	}
+	NewLocation += (MoveDirection * Speed * DeltaTime * CanWalk);
 	SetActorLocation(NewLocation);
-
 	MoveDirection = LivReference->GetActorLocation() - GetActorLocation();
 	MoveDirection.Normalize();
 }
 
-
-
-void AStorViking::RotateToLiv()
+void AStorViking::RotateToLiv(AActor* LivReference)
 {
+	//ALiv* LivReference = nullptr;
 	FVector LivLocation = LivReference->GetActorLocation();
 	FHitResult Hit;
 	bool HitResult = false;
@@ -63,27 +68,7 @@ void AStorViking::RotateToLiv()
 	if (LivReference)
 	{
 		FVector CursorLocation = Hit.Location;
-		FVector TempLocation = FVector(LivLocation.X, LivLocation.Y, 00.f);
-		FVector NewDirection = TempLocation - GetActorLocation();
-		NewDirection.Z = 0.f;
-		NewDirection.Normalize();
-		SetActorRotation(NewDirection.Rotation());
-	}
-
-}
-
-void AStorViking::RotateToMarve()
-{
-	FVector PlayerLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-	FHitResult Hit;
-	bool HitResult = false;
-
-	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
-
-	if (HitResult)
-	{
-		FVector CursorLocation = Hit.Location;
-		FVector TempLocation = FVector(PlayerLocation.X, PlayerLocation.Y, 00.f);
+		FVector TempLocation = FVector(LivLocation.X, LivLocation.Y, 0.0f);
 		FVector NewDirection = TempLocation - GetActorLocation();
 		NewDirection.Z = 0.f;
 		NewDirection.Normalize();
@@ -94,25 +79,10 @@ void AStorViking::RotateToMarve()
 
 void AStorViking::HitByRock()
 {
-	// Spawn of coin shall later be under Death();
 	UWorld* World = GetWorld();
 	if (Health > 0)
 	{
 		Health = Health - DamageByRock;
-	}
-	if (Health < 1)
-	{
-		Death();
-	}
-
-}
-void AStorViking::HitByMelee()
-{
-	// Spawn of coin shall later be under Death();
-	UWorld* World = GetWorld();
-	if (Health > 0)
-	{
-		Health = Health - DamageByMelee;
 	}
 	if (Health < 1)
 	{

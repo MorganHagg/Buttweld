@@ -2,11 +2,6 @@
 
 #include "DefenderTroll.h"
 #include "Marve.h"
-#include "Rock.h"
-#include "LitenViking.h"
-#include "Candy.h"
-#include "Coin.h"
-
 
 // Sets default values
 AMarve::AMarve()
@@ -22,16 +17,6 @@ AMarve::AMarve()
 
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
-	//CursorToWorld->SetupAttachment(RootComponent);
-
-	// TODO: Lag en UPORPERTY som tar in materialet
-	//static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'Game/Content/Materials/M_Cursor_Decal.M_Cursor_Decal'"));
-	//if (DecalMaterialAsset.Succeeded())
-	//{
-	//	CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
-	//}
-	//CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
-	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 
 	bUseControllerRotationYaw = false;
 }
@@ -74,20 +59,9 @@ void AMarve::RotateWithMouse()
 		FRotator CursorR = CursorFV.Rotation();
 		CursorToWorld->SetWorldLocation(Hit.Location);
 		CursorToWorld->SetWorldRotation(CursorR);
-
-
 		FVector CursorLocation = Hit.Location;
-		//UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());
 		FVector TempLocation = FVector(CursorLocation.X, CursorLocation.Y, 00.f);
 		FVector NewDirection;
-		//if (CursorMesh)
-		//{
-		//	CursorMesh->SetWorldLocation(TempLocation);
-		//}
-		//else
-		//{
-		//	UE_LOG(LogTemp, Warning, TEXT("Cursor Mesh not found"));	
-		//}
 		NewDirection = TempLocation - GetActorLocation();
 		NewDirection.Z = 0.f;
 		NewDirection.Normalize();
@@ -144,20 +118,6 @@ void AMarve::Move_YAxis(float AxisValue)
 void AMarve::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-	if (OtherActor->IsA(ALitenViking::StaticClass()))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Viking is on Marve"));
-		//this->SetActorHiddenInGame(true);
-		//UGameplayStatics::SetGamePaused(GetWorld(), true);
-	}
-
-	//if (OtherActor->IsA(ACoin::StaticClass()))
-	//{
-	//	OtherActor->Destroy();
-	//	CoinAmmount++;
-	//}
-
-
 	// TODO: Make "rock-ammo" with the code under
 	//if (OtherActor->IsA(AClip::StaticClass()))
 	//{

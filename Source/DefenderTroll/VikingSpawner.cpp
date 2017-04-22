@@ -66,7 +66,7 @@ void AVikingSpawner::Tick(float DeltaTime)
 			SpawnDelay = GetRandomSpawnDelay();
 
 			FVector Location = GetActorLocation();
-			UE_LOG(LogTemp, Warning, TEXT("Number of Vikings increases!!"));
+			//UE_LOG(LogTemp, Warning, TEXT("Number of Vikings increases!!"));
 			numberOfViking++;
 			GetWorld()->SpawnActor<ALitenViking>(LitenVikingEnemy, Location, FRotator::ZeroRotator);
 		}
@@ -79,7 +79,7 @@ void AVikingSpawner::Tick(float DeltaTime)
 			SpawnDelay = GetRandomSpawnDelay();
 
 			FVector Location = GetActorLocation();
-			UE_LOG(LogTemp, Warning, TEXT("Number of Vikings increases!!"));
+			//UE_LOG(LogTemp, Warning, TEXT("Number of Vikings increases!!"));
 			numberOfViking++;
 			GetWorld()->SpawnActor<AStorViking>(StorVikingEnemy, Location, FRotator::ZeroRotator);
 		}

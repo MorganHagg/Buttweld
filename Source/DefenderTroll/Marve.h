@@ -3,6 +3,9 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "Rock.h"
+#include "Candy.h"
+#include "Coin.h"
 #include "Marve.generated.h"
 
 UCLASS()

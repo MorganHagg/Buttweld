@@ -2,7 +2,6 @@
 
 #include "DefenderTroll.h"
 #include "Coin.h"
-#include "LitenViking.h"
 
 
 // Sets default values
@@ -20,13 +19,11 @@ void ACoin::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("Spawned coin at %s"), *GetActorLocation().ToString());
-
 }
 
 // Called every frame
 void ACoin::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	AddActorLocalRotation(FRotator(0.0f, RotationSpeed, 0.0f)*DeltaTime);
 }

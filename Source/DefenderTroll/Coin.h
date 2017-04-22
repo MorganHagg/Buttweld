@@ -25,5 +25,8 @@ public:
 		USphereComponent* CollisionBox = nullptr;
 
 	static TArray<AActor*> NumberOfCoins;
+
+	UPROPERTY(EditAnywhere)
+		float RotationSpeed = 50.0f;
 	
 };

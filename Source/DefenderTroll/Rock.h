@@ -3,6 +3,8 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "LitenViking.h"
+#include "StorViking.h"
 #include "Rock.generated.h"
 
 UCLASS()

@@ -1,17 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
 #include "GameFramework/Actor.h"
 #include "Coin.h"
 #include "Marve.h"
 #include "Liv.generated.h"
+
+class ALitenViking;
+class AStorViking;
 
 UCLASS()
 class DEFENDERTROLL_API ALiv : public AActor
 {
 	GENERATED_BODY()
 
+		
 public:
 	// Sets default values for this actor's properties
 	ALiv();
@@ -29,13 +32,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
-	virtual void RotateToCoin();
-	virtual void RotateToCandy();
+	void RotateToCoin();
+	void RotateToCandy();
+	void RotateToMarve();
+	void FindObjects();
+	void CheckForViking();
 
-	ACoin* CoinReference;
-	ACandy* CandyReference;
+	ACoin* CoinReference = nullptr;
+	ACandy* CandyReference = nullptr;
+
 	TArray<AActor*> FoundCoins;
 	TArray<AActor*> FoundCandy;
+	TArray<AActor*> FoundLitenViking;
+	TArray<AActor*> FoundStorViking;
 
 	bool CoinExist = false;
 	bool CandyExist = false;
@@ -43,6 +52,9 @@ public:
 
 	int NumberOfCoins;
 	int NumberOfCandy;
+	int NumberOfLitenViking;
+	int NumberOfStorViking;
+
 	// Initialising for collision and overlap
 	UShapeComponent* CollisionBox = nullptr;
 
@@ -51,14 +63,39 @@ public:
 			AActor *OtherActor, UPrimitiveComponent *OtherComponent,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = NumberOfViking)
-		int32 ScareOMeter = 50;
-	UPROPERTY(EditAnywhere)
-		int32 CalmDown = 10;
-	UPROPERTY(EditAnywhere)
-		int32 ScareValue = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ScareOMeter)
+		float MaxScareOMeter = 1000.0f;
 
-private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ScareOMeter)
+		float CurrentScareOMeter = 0.0f;
+
+	
 	UPROPERTY(EditAnywhere)
-		float Speed = 150.f;
+		float CalmDown = 5.0f;
+	
+	UPROPERTY(EditAnywhere)
+		float ScareValue = 10.0f;
+
+	UPROPERTY(EditAnywhere)
+		float MinimumRadius = 100.0f;
+
+	UPROPERTY(EditAnywhere)
+		float RadiusToMarve;
+
+	UPROPERTY(EditAnywhere)
+		float ScareRadius = 100.0f;
+
+	UPROPERTY(EditAnywhere)
+		float RadiusToLitenViking;
+
+	UPROPERTY(EditAnywhere)
+		float RadiusToStorViking;
+
+	UPROPERTY(EditAnywhere)
+		float Speed = 150.0f;
+
+	UPROPERTY(EditAnywhere)
+		float StandStillMargine = 5.0f;
+
+	bool CanWalk;
 };

@@ -26,15 +26,21 @@ public:
 	// Make editable anywhere
 	UPROPERTY(EditAnywhere)
 		USceneComponent* OurVisibleComponent;
-	FVector CandyDestination;
+
 	// Initialising for collision and overlap
-	UShapeComponent* CollisionBox = nullptr;
+	UPROPERTY(EditAnywhere)
+		UShapeComponent* CollisionBox = nullptr;
 
 	// Defines throw speed
 	UPROPERTY(EditAnywhere)
 		float Speed = 400.f;
 
+	FVector CandyDestination;
+
 	float ThrowDistance;
 	float DistanceTraveled;
-	
+
+	UPROPERTY(EditAnywhere)
+		float RotationSpeed = 50.0f;
+
 };
