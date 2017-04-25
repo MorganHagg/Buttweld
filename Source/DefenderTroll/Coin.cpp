@@ -18,12 +18,13 @@ ACoin::ACoin()
 void ACoin::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 // Called every frame
 void ACoin::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Rotates the coin
 	AddActorLocalRotation(FRotator(0.0f, RotationSpeed, 0.0f)*DeltaTime);
 }

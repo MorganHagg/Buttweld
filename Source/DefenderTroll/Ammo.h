@@ -3,16 +3,16 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "Coin.generated.h"
+#include "Ammo.generated.h"
 
 UCLASS()
-class DEFENDERTROLL_API ACoin : public AActor
+class DEFENDERTROLL_API AAmmo : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ACoin();
+	AAmmo();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -20,12 +20,10 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	//The collision shape of the coin
+	/**The collision shape of the clip*/
 	UPROPERTY(EditAnywhere)
-		USphereComponent* CollisionBox = nullptr;
-
-	static TArray<AActor*> NumberOfCoins;
+		USphereComponent* RootSphere = nullptr;
 
 	UPROPERTY(EditAnywhere)
-		float RotationSpeed = 50.0f;	
+		float SphereRadius = 40.0f;
 };

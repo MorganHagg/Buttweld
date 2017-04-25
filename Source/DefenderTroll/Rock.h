@@ -42,7 +42,9 @@ public:
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 	
 	FVector RockDestination;
+
 	UPROPERTY(EditAnywhere)
 		float ThrowDistance = 800.0f;
+
 	float DistanceTraveled;
 };

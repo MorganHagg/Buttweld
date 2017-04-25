@@ -7,19 +7,16 @@
 #include "StorViking.h"
 #include "LitenViking.h"
 
-//#include "EngineUtils.h"
 // Sets default values
-
 ALiv::ALiv()
 {
+	// Set this actor to call Tick() every frame.
+	PrimaryActorTick.bCanEverTick = true;
 	// Hitbox
 	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	// Visible component
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -40,22 +37,30 @@ void ALiv::BeginPlay()
 	CandyExist = false;
 }
 
-
+// TODO: Fiks bug hvor liv beveger seg bakover, om hun "unngår marve" og det spawner en coin samtidig
 // Called every frame
 void ALiv::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FindObjects();
 	FVector LivDestination;
 	FVector NewLocation = GetActorLocation();
 	FVector MarveLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 
-	CheckForViking();
-	if (CurrentScareOMeter > 0 /*&& ( Time since last scared)*/)
+	// Checks if the scare-o-meter is full. If it is, the game is lost
+	if (CurrentScareOMeter >= MaxScareOMeter)
+	{
+		Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->GameLost = true;
+	}
+	if (CurrentScareOMeter > 0)
 	{
 		CurrentScareOMeter = CurrentScareOMeter - CalmDown;
 	}
 
+	// Finds all coins, candies and vikings
+	FindObjects();
+	CheckForViking();
+
+	// Movement logic
 	if (CandyExist)
 	{
 		RotateToCandy();
@@ -75,7 +80,10 @@ void ALiv::Tick(float DeltaTime)
 			RadiusToMarve = sqrt(pow((MarveLocation.X - NewLocation.X), 2) + pow((MarveLocation.Y - NewLocation.Y), 2));
 			LivDestination = MarveLocation;
 			RotateToMarve();
-			if (((RadiusToMarve - StandStillMargine) < MinimumRadius) && ((RadiusToMarve + StandStillMargine) > MinimumRadius) && ((!CandyExist) && (!CandyExist)))
+			// First checks if Liv is within Standstill radius to Marve
+			// Then checks if Coin and/or Candy exists
+			// If the first is true, and the second one is false, then Liv can't walk
+			if (((RadiusToMarve - StandStillMargine) < MinimumRadius) && ((RadiusToMarve + StandStillMargine) > MinimumRadius) && ((!CoinExist) && (!CandyExist)))
 			{
 				CanWalk = false;
 			}
@@ -87,7 +95,8 @@ void ALiv::Tick(float DeltaTime)
 	}
 	NewLocation += (MoveDirection * Speed * DeltaTime * CanWalk);
 	SetActorLocation(NewLocation);
-	if (RadiusToMarve < MinimumRadius && ((!CandyExist) && (!CandyExist)))
+	// If Liv is too close to Marve, and no coin and/or candy exist, then Livs move direction is away from Marve
+	if (RadiusToMarve < MinimumRadius && ((!CoinExist) && (!CandyExist)))
 	{
 		MoveDirection = GetActorLocation() - LivDestination;
 	}
@@ -95,25 +104,26 @@ void ALiv::Tick(float DeltaTime)
 	{
 		MoveDirection = LivDestination - GetActorLocation();
 	}
-
+	// Locks liv movement to X and Y plane.
 	MoveDirection.Z = 0.0f;
 	MoveDirection.Normalize();
 }
 
+// Checks for all vikings within a parameter to Liv. If there are any: Increase Scare-o-meter
 void ALiv::CheckForViking()
 {
-	int VikingMultiplier = 0;
 	ALitenViking* LitenVikingReference = nullptr;
 	AStorViking* StorVikingReference = nullptr;
 	FVector VikingLocation;
 	FVector NewLocation;
+	
+	// Finds all actors of LitenViking and StorViking, and counts them
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALitenViking::StaticClass(), FoundLitenViking);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStorViking::StaticClass(), FoundStorViking);
 	NumberOfLitenViking = FoundLitenViking.Num() - 1;
 	NumberOfStorViking = FoundStorViking.Num() - 1;
-	//UE_LOG(LogTemp, Error, TEXT("Liv counts Liten vikings: %d"), this->NumberOfLitenViking);
-	//UE_LOG(LogTemp, Error, TEXT("Liv counts Stor vikings: %d"), this->NumberOfStorViking);
 
+	// Checks if there are any vikings to save computing power, since the calculation is demanding
 	if (NumberOfLitenViking > 0)
 	{
 		for (int i = 0; i <= NumberOfLitenViking; i++)
@@ -124,12 +134,11 @@ void ALiv::CheckForViking()
 			RadiusToLitenViking = sqrt(pow((VikingLocation.X - NewLocation.X), 2) + pow((VikingLocation.Y - NewLocation.Y), 2));
 			if (RadiusToLitenViking < ScareRadius)
 			{
-				VikingMultiplier++;
 				CurrentScareOMeter = CurrentScareOMeter + ScareValue;
-				//UE_LOG(LogTemp, Error, TEXT("Liv is being scared by LitenViking. The scare-level is now: %d"), this->CurrentScareOMeter);
 			}
 		}
 	}
+	// Checks if there are any vikings to save computing power, since the calculation is demanding
 	if (NumberOfStorViking > 0)
 	{
 		for (int i = 0; i <= NumberOfStorViking; i++)
@@ -141,22 +150,19 @@ void ALiv::CheckForViking()
 			if (RadiusToStorViking < ScareRadius)
 			{
 				CurrentScareOMeter = CurrentScareOMeter + ScareValue;
-				//UE_LOG(LogTemp, Error, TEXT("Liv is being scared by StorViking. The scare-level is now: %d"), this->CurrentScareOMeter);
 			}
 		}
 	}
-	UE_LOG(LogTemp, Error, TEXT("The scare-level is now: %d"), this->CurrentScareOMeter);
 }
 
-
-
-// Finds all instances of Coins and Candy
+// Finds all instances of Coins and Candy, then counts them
 void ALiv::FindObjects()
 {
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACoin::StaticClass(), FoundCoins);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACandy::StaticClass(), FoundCandy);
 	NumberOfCoins = FoundCoins.Num();
 	NumberOfCandy = FoundCandy.Num();
+	// If any candy is found, set one to CandyReference
 	if (NumberOfCandy > 0)
 	{
 		for (int i = 0; i <= NumberOfCandy; i++)
@@ -166,6 +172,7 @@ void ALiv::FindObjects()
 			break;
 		}
 	}
+	// If any coin is found, set one to CoinReference
 	if (NumberOfCoins > 0)
 	{
 		for (int i = 0; i <= NumberOfCoins; i++)
@@ -175,12 +182,10 @@ void ALiv::FindObjects()
 			break;
 		}
 	}
-
 	if (NumberOfCoins == 0)
 	{
 		CoinExist = false;
 	}
-
 	if (NumberOfCandy == 0)
 	{
 		CandyExist = false;
@@ -240,13 +245,8 @@ void ALiv::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActo
 	if (OtherActor->IsA(ACoin::StaticClass()))
 	{
 		Cast<ACoin>(OtherActor)->Destroy();
+		Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->IncreaseCoin();
 		UE_LOG(LogTemp, Error, TEXT("Liv picked up a coin"));
 		CoinExist = false;
 	}
-
-	//if (OtherActor->IsA(ALitenViking::StaticClass()))
-	//{
-	//	UE_LOG(LogTemp, Error, TEXT("Liv is being scared by LitenViking. The scare-level is now: %d"), this->ScareOMeter);
-	//	
-	//}
 }

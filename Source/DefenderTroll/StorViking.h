@@ -31,29 +31,32 @@ public:
 	// Defines direction for Vikings
 	FVector MoveDirection = FVector(1.f, 0.f, 0.f);
 
-	virtual void RotateToLiv(AActor* LivReference);
-	virtual void HitByRock();
-	virtual void Death();
+	void RotateToLiv(AActor* LivReference);
+	void HitByRock();
+	void Death();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = NumberOfViking)
-		int32 NumberOfViking;
 private:
-	// Defines the movement speed of Vikings
+	
+	// Reads the current distance from viking to Liv (cm)
 	UPROPERTY(EditAnywhere)
 		float RadiusToLiv;
 
+	// Sets the minimum distance viking will walk to Liv (cm)
 	UPROPERTY(EditAnywhere)
 		float MinimumRadius = 100.0f;
 
+	//Sets the error-margine to avoid stuttering due to Liv being unable to find the exact locations of destinations
 	UPROPERTY(EditAnywhere)
 		float StandStillMargine = 5.0f;
 
+	// Sets the movement speed of Vikings
 	UPROPERTY(EditAnywhere)
 		float Speed = 150.f;
 
 	UPROPERTY(EditAnywhere)
-		int Health = 120;
+		int Health = 150;
 
+	// Sets the damage viking takes from rocks
 	UPROPERTY(EditAnywhere)
 		int DamageByRock = 50;
 

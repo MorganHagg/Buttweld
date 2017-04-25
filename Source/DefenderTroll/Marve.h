@@ -4,6 +4,7 @@
 
 #include "GameFramework/Character.h"
 #include "Rock.h"
+#include "Ammo.h"
 #include "Candy.h"
 #include "Coin.h"
 #include "Marve.generated.h"
@@ -30,9 +31,12 @@ public:
 	void Move_YAxis(float AxisValue);
 	void Throw();
 	void Lure();
+	void IncreaseViking();
+	void DecreaseViking();
+	void IncreaseCoin();
 
 	// Rotates Marve towards cursor rotation
-	virtual void RotateWithMouse();
+	void RotateWithMouse();
 
 	FVector CurrentVelocity;
 
@@ -48,27 +52,23 @@ public:
 	UPROPERTY(EditAnywhere)
 		float YawSpeed = 0.1f;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
-	//	USceneComponent* CursorMesh = nullptr;
-
-	/** A decal that projects to the cursor location. */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	//	class UDecalComponent* CursorToWorld;
-
 	UPROPERTY(EditAnywhere)
 		class UDecalComponent* CursorToWorld;
 
-	UFUNCTION()
-		void OnOverlap(UPrimitiveComponent* OverlappedComponent,
-			AActor *OtherActor, UPrimitiveComponent *OtherComponent,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
-
-	bool Died = false;
-
+	// Sets Marves movement speed
 	UPROPERTY(EditAnywhere)
 		float Speed = 200.0f;
 
-	UPROPERTY(EditAnywhere)
-		float MeleeRange = 100.0f;
-
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		int32 AmmoCount = 10;
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		int32 CoinCount = 0;
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		int32 WinAmmount = 30;
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		int32 EnemyCount = 0;
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		bool GameWon;
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		bool GameLost;
 };

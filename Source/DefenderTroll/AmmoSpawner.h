@@ -3,28 +3,26 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "VikingSpawner.generated.h"
+#include "Ammo.h"
+#include "AmmoSpawner.generated.h"
 
 UCLASS()
-class DEFENDERTROLL_API AVikingSpawner : public AActor
+class DEFENDERTROLL_API AAmmoSpawner : public AActor
 {
 	GENERATED_BODY()
-
-public:
+	
+public:	
 	// Sets default values for this actor's properties
-	AVikingSpawner();
+	AAmmoSpawner();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 	// Called every frame
-	virtual void Tick(float DeltaSeconds) override;
+	virtual void Tick( float DeltaSeconds ) override;
 
-	UPROPERTY(EditAnywhere, Category = Spawning)
-		TSubclassOf<class ALitenViking> LitenVikingEnemy;
-
-	UPROPERTY(EditAnywhere, Category = Spawning)
-		TSubclassOf<class AStorViking> StorVikingEnemy;
+	UPROPERTY(EditAnywhere, Category = Spawn)
+		TSubclassOf<class AAmmo> Ammo;
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere = nullptr;
@@ -37,11 +35,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawning)
 		float SpawnDelayRangeHigh = 5.0f;
 
-	// TypeSpawner defines what type of mob is spawned. 1 = LitenViking, 2 = StorViking
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawning)
-		int TypeSpawner = 1;
-
-	/** Whether or not spawning is enabled */
+	/* Whether or not spawning is enabled */
 	bool bSpawningEnabled;
 
 	/** Calculates a random spawn delay */
@@ -52,5 +46,5 @@ public:
 
 	/** The timer for when to spawn the pickup */
 	float SpawnTime;
-
+	
 };

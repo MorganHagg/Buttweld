@@ -24,8 +24,6 @@ void ARock::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//UE_LOG(LogTemp, Warning, TEXT("Spawned Rock"));
-
 	//Checks if there is overlap
 	CollisionBox = this->FindComponentByClass<USphereComponent>();
 
@@ -40,14 +38,11 @@ void ARock::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("No Collider"));
 	}
 
-
-	// Calculates the distance between spawnpoint and cursor location at spawn-time
+	// Calculates the direction Marve is facing
 	FHitResult Hit;
 	FVector CursorLocation;
 	bool HitResult = false;
-
 	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
-
 	if (HitResult)
 	{
 		FVector CursorFV = Hit.ImpactNormal;
@@ -57,49 +52,40 @@ void ARock::BeginPlay()
 			CursorToWorld->SetWorldLocation(Hit.Location);
 			CursorToWorld->SetWorldRotation(CursorR);
 		}
-		
 		CursorLocation = Hit.Location;
-		/*UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());*/
 		RockDestination = FVector(CursorLocation.X, CursorLocation.Y, 00.f);
 	}
-
-	FVector CurrentLocation = GetActorLocation();
-
 }
 
 
 
-// Defines Bullet Movement
+// Defines rock Movement
 void ARock::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	FVector NewLocation = GetActorLocation();
 	NewLocation += GetActorForwardVector() * Speed * DeltaTime;
 	SetActorLocation(NewLocation);
-
-	
 	DistanceTraveled += Speed * DeltaTime;
 
 	if (DistanceTraveled >= ThrowDistance)
 	{
 		Destroy();
-		//UE_LOG(LogTemp, Warning, TEXT("Rock destroyed"));
 	}
 }
 
-//Checks to see if there is overlapping between Bullet and Enemy
+//Checks to see if there is overlapping between rock and viking
 void ARock::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
 	if (OtherActor->IsA(ALitenViking::StaticClass()))
 	{
 		Cast<ALitenViking>(OtherActor)->HitByRock();
-		Destroy();		
+		this->Destroy();		
 	}
 	if (OtherActor->IsA(AStorViking::StaticClass()))
 	{
 		Cast<AStorViking>(OtherActor)->HitByRock();
-		Destroy();
+		this->Destroy();
 	}
 }

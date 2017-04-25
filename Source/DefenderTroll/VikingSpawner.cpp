@@ -19,17 +19,12 @@ AVikingSpawner::AVikingSpawner()
 	SpawnDelayRangeLow;
 	SpawnDelayRangeHigh;
 	SpawnDelay = GetRandomSpawnDelay();
-
-
 }
 
 // Called when the game starts or when spawned
 void AVikingSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	numberOfViking = 0;
-	maxNumberOfSpawn = MaxSpawns;
-
 }
 
 float AVikingSpawner::GetRandomSpawnDelay()
@@ -44,43 +39,31 @@ void AVikingSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// TODO: Lage en forløkke som teller antall vikinger på banen
-	// TODO: Forløkken bestemmer om spawneren skal spawne flere vikinger
-
-
-
-
 	// Always add delta time to our Spawn Time
 	SpawnTime += DeltaTime;
 
 	bool bShouldSpawn = (SpawnTime > SpawnDelay);
 
-	if (bShouldSpawn && (numberOfViking < maxNumberOfSpawn))
+	if (bShouldSpawn)
 	{
+		// TypeSpawner == 1 sets the spawner to spawn LitenViking
 		if (TypeSpawner == 1)
 		{
-
 			//Deduct spawn delay from accumulated time value
 			SpawnTime -= SpawnDelay;
-
 			SpawnDelay = GetRandomSpawnDelay();
 
 			FVector Location = GetActorLocation();
-			//UE_LOG(LogTemp, Warning, TEXT("Number of Vikings increases!!"));
-			numberOfViking++;
 			GetWorld()->SpawnActor<ALitenViking>(LitenVikingEnemy, Location, FRotator::ZeroRotator);
 		}
+		// TypeSpawner == 2 sets the spawner to spawn StorViking
 		if (TypeSpawner == 2)
 		{
-
 			//Deduct spawn delay from accumulated time value
 			SpawnTime -= SpawnDelay;
-
 			SpawnDelay = GetRandomSpawnDelay();
 
 			FVector Location = GetActorLocation();
-			//UE_LOG(LogTemp, Warning, TEXT("Number of Vikings increases!!"));
-			numberOfViking++;
 			GetWorld()->SpawnActor<AStorViking>(StorVikingEnemy, Location, FRotator::ZeroRotator);
 		}
 	}

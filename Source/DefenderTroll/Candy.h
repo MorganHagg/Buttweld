@@ -40,6 +40,7 @@ public:
 	float ThrowDistance;
 	float DistanceTraveled;
 
+	// Sets the speed of which the candy rotates
 	UPROPERTY(EditAnywhere)
 		float RotationSpeed = 50.0f;
 

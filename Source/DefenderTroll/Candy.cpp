@@ -19,15 +19,10 @@ void ACandy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//UE_LOG(LogTemp, Warning, TEXT("Spawned Candy"));
-
-	// Calculates the distance between spawnpoint and cursor location at spawn-time
 	FHitResult Hit;
 	FVector CursorLocation;
 	bool HitResult = false;
-
 	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
-
 	if (HitResult)
 	{
 		FVector CursorFV = Hit.ImpactNormal;
@@ -37,14 +32,13 @@ void ACandy::BeginPlay()
 			CursorToWorld->SetWorldLocation(Hit.Location);
 			CursorToWorld->SetWorldRotation(CursorR);
 		}
-
 		CursorLocation = Hit.Location;
 		CandyDestination = FVector(CursorLocation.X, CursorLocation.Y, 0.0f);
 	}
-
 	FVector CurrentLocation = GetActorLocation();
+
+	// Calculates the distance between spawnpoint and cursor location at spawn-time
 	ThrowDistance = sqrt(pow((CursorLocation.X - CurrentLocation.X), 2) + pow((CursorLocation.Y - CurrentLocation.Y), 2));
-	//UE_LOG(LogTemp, Error, TEXT("Throw distance %f"), ThrowDistance);
 }
 
 // Called every frame
@@ -55,13 +49,12 @@ void ACandy::Tick( float DeltaTime )
 	NewLocation += GetActorForwardVector() * Speed * DeltaTime;
 	NewLocation.Z = 0.0f;
 	SetActorLocation(NewLocation);
-
 	DistanceTraveled += Speed * DeltaTime;
 
+	// Stops the candy when it reaches its destination, and adds rotation to make it spinn
 	if (DistanceTraveled >= ThrowDistance)
 	{
 		Speed = 0.0f;
 		AddActorLocalRotation(FRotator(0.0f, RotationSpeed, 0.0f)*DeltaTime);
-
 	}
 }

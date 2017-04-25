@@ -17,7 +17,6 @@ AMarve::AMarve()
 
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
-
 	bUseControllerRotationYaw = false;
 }
 
@@ -25,34 +24,47 @@ AMarve::AMarve()
 void AMarve::BeginPlay()
 {
 	Super::BeginPlay();
-
 	// Show windows-cursor ingame
 	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
-
-	UWorld* World = GetWorld();
+	GameWon = false;
 }
 
 // Called every frame
 void AMarve::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	if (!CurrentVelocity.IsZero())
 	{
 		FVector NewLocation = GetActorLocation() + (CurrentVelocity * DeltaTime);
 		SetActorLocation(NewLocation);
 	}
 	RotateWithMouse();
+	if (CoinCount >= WinAmmount)
+	{
+		GameWon = true;
+	}
 }
 
+void AMarve::IncreaseViking()
+{
+	EnemyCount++;
+}
+
+void AMarve::DecreaseViking()
+{
+	EnemyCount--;
+}
+
+void AMarve::IncreaseCoin()
+{
+	CoinCount++;
+}
 
 void AMarve::RotateWithMouse()
 {
 	FHitResult Hit;
 	bool HitResult = false;
-
 	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
-
 	if (HitResult)
 	{
 		FVector CursorFV = Hit.ImpactNormal;
@@ -70,13 +82,10 @@ void AMarve::RotateWithMouse()
 
 }
 
-
-
 // Called to bind functionality to input
 void AMarve::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
 	Super::SetupPlayerInputComponent(InputComponent);
-
 	InputComponent->BindAxis("Move_X", this, &AMarve::Move_XAxis);
 	InputComponent->BindAxis("Move_Y", this, &AMarve::Move_YAxis);
 	InputComponent->BindAction("Throw", IE_Pressed, this, &AMarve::Throw);
@@ -85,14 +94,15 @@ void AMarve::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 
 void AMarve::Throw()
 {
-	UWorld* World = GetWorld();
-
-	///Spawn one bullet if we have ammo
-	// Todo: Add "ammo"
-	if (World)
+	//Spawn one bullet if we have ammo
+	if (AmmoCount > 0)
 	{
 		GetWorld()->SpawnActor<ARock>(Rock_BP, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-		//Ammo--;
+		AmmoCount--;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Marve doesn't have any rocks!"));
 	}
 }
 
@@ -113,16 +123,4 @@ void AMarve::Move_XAxis(float AxisValue)
 void AMarve::Move_YAxis(float AxisValue)
 {
 	CurrentVelocity.Y = FMath::Clamp(AxisValue, -1.0f, 1.0f) * Speed;
-}
-
-void AMarve::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
-{
-	// TODO: Make "rock-ammo" with the code under
-	//if (OtherActor->IsA(AClip::StaticClass()))
-	//{
-	//	Ammo = AmmoInClip;
-	//	UE_LOG(LogTemp, Warning, TEXT("Player Picked Up Clip"))
-	//		OtherActor->Destroy();
-	//}
 }

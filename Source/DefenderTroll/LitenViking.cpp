@@ -9,11 +9,9 @@ ALitenViking::ALitenViking()
 {
 	// Hitbox
 	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-
 	// Visible component
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
-
 	// Set this actor to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -22,8 +20,7 @@ ALitenViking::ALitenViking()
 void ALitenViking::BeginPlay()
 {
 	Super::BeginPlay();
-	//UE_LOG(LogTemp, Warning, TEXT("Liten Viking Spawned"));
-	NumberOfViking++;
+	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->IncreaseViking();
 }
 
 // Called every frame
@@ -44,6 +41,7 @@ void ALitenViking::Tick(float DeltaTime)
 
 	// Rotates the viking to Livs location
 	RotateToLiv(LivReference);
+	// Stops the viking from walking if it's too close to Liv
 	if (RadiusToLiv < MinimumRadius)
 	{
 		CanWalk = false;
@@ -58,17 +56,11 @@ void ALitenViking::Tick(float DeltaTime)
 	MoveDirection.Normalize();
 }
 
-
-
 void ALitenViking::RotateToLiv(AActor* LivReference)
 {
 	FVector LivLocation = LivReference->GetActorLocation();
-	FHitResult Hit;
-	bool HitResult = false;
-
 	if (LivReference)
 	{
-		FVector CursorLocation = Hit.Location;
 		FVector TempLocation = FVector(LivLocation.X, LivLocation.Y, 0.0f);
 		FVector NewDirection = TempLocation - GetActorLocation();
 		NewDirection.Z = 0.f;
@@ -79,7 +71,6 @@ void ALitenViking::RotateToLiv(AActor* LivReference)
 
 void ALitenViking::HitByRock()
 {	
-	UWorld* World = GetWorld();
 	if (Health > 0)
 	{
 		Health = Health - DamageByRock;
@@ -88,7 +79,6 @@ void ALitenViking::HitByRock()
 	{
 		 Death();
 	}
-	
 }
 
 void ALitenViking::Death()
@@ -97,5 +87,5 @@ void ALitenViking::Death()
 	UE_LOG(LogTemp, Warning, TEXT("Coin spawned"));
 	GetWorld()->SpawnActor<ACoin>(Coin_BP, Location, FRotator::ZeroRotator);
 	this->Destroy();
-	NumberOfViking--;
+	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->DecreaseViking();
 }

@@ -9,11 +9,9 @@ AStorViking::AStorViking()
 {
 	// Hitbox
 	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-
 	// Visible component
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
-
 	// Set this actor to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -22,8 +20,7 @@ AStorViking::AStorViking()
 void AStorViking::BeginPlay()
 {
 	Super::BeginPlay();
-	//UE_LOG(LogTemp, Warning, TEXT("Stor Viking Spawned"));
-	NumberOfViking++;
+	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->IncreaseViking();
 }
 
 // Called every frame
@@ -44,6 +41,7 @@ void AStorViking::Tick(float DeltaTime)
 
 	// Rotates the viking to Livs location
 	RotateToLiv(LivReference);
+	// Stops the viking from walking if it's too close to Liv
 	if (RadiusToLiv < MinimumRadius)
 	{
 		CanWalk = false;
@@ -60,14 +58,9 @@ void AStorViking::Tick(float DeltaTime)
 
 void AStorViking::RotateToLiv(AActor* LivReference)
 {
-	//ALiv* LivReference = nullptr;
 	FVector LivLocation = LivReference->GetActorLocation();
-	FHitResult Hit;
-	bool HitResult = false;
-
 	if (LivReference)
 	{
-		FVector CursorLocation = Hit.Location;
 		FVector TempLocation = FVector(LivLocation.X, LivLocation.Y, 0.0f);
 		FVector NewDirection = TempLocation - GetActorLocation();
 		NewDirection.Z = 0.f;
@@ -79,7 +72,6 @@ void AStorViking::RotateToLiv(AActor* LivReference)
 
 void AStorViking::HitByRock()
 {
-	UWorld* World = GetWorld();
 	if (Health > 0)
 	{
 		Health = Health - DamageByRock;
@@ -88,7 +80,6 @@ void AStorViking::HitByRock()
 	{
 		Death();
 	}
-
 }
 
 void AStorViking::Death()
@@ -97,5 +88,5 @@ void AStorViking::Death()
 	UE_LOG(LogTemp, Warning, TEXT("Coin spawned"));
 	GetWorld()->SpawnActor<ACoin>(Coin_BP, Location, FRotator::ZeroRotator);
 	this->Destroy();
-	NumberOfViking --;
+	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->DecreaseViking();
 }
