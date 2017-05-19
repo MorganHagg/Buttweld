@@ -33,6 +33,21 @@ void AMarve::BeginPlay()
 void AMarve::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	ThrowTime += DeltaTime;
+
+	TimeTillThrow = candyThrowDelay - ThrowTime;
+
+	if (ThrowTime > candyThrowDelay)
+	{
+		bCandyEnabled = true;
+	}
+	else
+	{
+		bCandyEnabled = false;
+		UE_LOG(LogTemp, Warning, TEXT("Marve can't throw candy yet. Time till throw: %f"), this->TimeTillThrow);
+	}
+
 	if (!CurrentVelocity.IsZero())
 	{
 		FVector NewLocation = GetActorLocation() + (CurrentVelocity * DeltaTime);
@@ -89,7 +104,7 @@ void AMarve::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	InputComponent->BindAxis("Move_X", this, &AMarve::Move_XAxis);
 	InputComponent->BindAxis("Move_Y", this, &AMarve::Move_YAxis);
 	InputComponent->BindAction("Throw", IE_Pressed, this, &AMarve::Throw);
-	InputComponent->BindAction("Lure", IE_Pressed, this, &AMarve::Lure);
+	InputComponent->BindAction("Candy", IE_Pressed, this, &AMarve::CandyThrow);
 }
 
 void AMarve::Throw()
@@ -106,12 +121,17 @@ void AMarve::Throw()
 	}
 }
 
-void AMarve::Lure()
+void AMarve::CandyThrow()
 {
 	UWorld* World = GetWorld();
-	if (World)
+	if (bCandyEnabled)
 	{
 		GetWorld()->SpawnActor<ACandy>(Candy_BP, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+		ThrowTime -= candyThrowDelay;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Marve can't throw candy yet"))
 	}
 }
 

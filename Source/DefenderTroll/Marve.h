@@ -30,7 +30,7 @@ public:
 	void Move_XAxis(float AxisValue);
 	void Move_YAxis(float AxisValue);
 	void Throw();
-	void Lure();
+	void CandyThrow();
 	void IncreaseViking();
 	void DecreaseViking();
 	void IncreaseCoin();
@@ -58,6 +58,19 @@ public:
 	// Sets Marves movement speed
 	UPROPERTY(EditAnywhere)
 		float Speed = 200.0f;
+
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		float candyThrowDelay = 5.0f;
+	
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		float TimeTillThrow;
+
+	/** Whether or not spawning is enabled */
+	bool bCandyEnabled;
+
+	/** The timer for when to throw the candy */
+	float ThrowTime;
+
 
 	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
 		int32 AmmoCount = 10;
