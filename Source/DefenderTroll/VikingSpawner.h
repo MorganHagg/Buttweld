@@ -16,9 +16,11 @@ public:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
+	
+	void GameWon();
+	bool IsGameWon;
 
 	UPROPERTY(EditAnywhere, Category = Spawning)
 		TSubclassOf<class ALitenViking> LitenVikingEnemy;
@@ -52,5 +54,4 @@ public:
 
 	/** The timer for when to spawn the pickup */
 	float SpawnTime;
-
 };

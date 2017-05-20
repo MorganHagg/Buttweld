@@ -89,3 +89,8 @@ void ALitenViking::Death()
 	this->Destroy();
 	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->DecreaseViking();
 }
+
+void ALitenViking::GameWon()
+{
+	this->Destroy();
+}

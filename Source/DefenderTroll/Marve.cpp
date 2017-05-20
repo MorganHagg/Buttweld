@@ -27,6 +27,9 @@ void AMarve::BeginPlay()
 	// Show windows-cursor ingame
 	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
 	GameWon = false;
+
+	// Sets the Candy-Cooldown to 0 at the start of the game
+	ThrowTime -= candyThrowDelay;
 }
 
 // Called every frame
@@ -34,18 +37,16 @@ void AMarve::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	ThrowTime += DeltaTime;
-
-	TimeTillThrow = candyThrowDelay - ThrowTime;
-
-	if (ThrowTime > candyThrowDelay)
+	CurrentTime += DeltaTime;
+	if ((ThrowTime + candyThrowDelay) < CurrentTime)
 	{
 		bCandyEnabled = true;
 	}
 	else
 	{
 		bCandyEnabled = false;
-		UE_LOG(LogTemp, Warning, TEXT("Marve can't throw candy yet. Time till throw: %f"), this->TimeTillThrow);
+		TimeTillThrow = (candyThrowDelay + ThrowTime) - CurrentTime;
+		//UE_LOG(LogTemp, Warning, TEXT("Marve can't throw candy yet. Time till throw: %f"), this->ThrowTime);
 	}
 
 	if (!CurrentVelocity.IsZero())
@@ -57,6 +58,12 @@ void AMarve::Tick(float DeltaTime)
 	if (CoinCount >= WinAmmount)
 	{
 		GameWon = true;
+		DestroyAllVikings();
+	}
+
+	if (AmmoCount > MaxAmmo)
+	{
+		AmmoCount = MaxAmmo;
 	}
 }
 
@@ -127,7 +134,7 @@ void AMarve::CandyThrow()
 	if (bCandyEnabled)
 	{
 		GetWorld()->SpawnActor<ACandy>(Candy_BP, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-		ThrowTime -= candyThrowDelay;
+		ThrowTime = CurrentTime; // Get the current time at throw-time
 	}
 	else
 	{
@@ -143,4 +150,48 @@ void AMarve::Move_XAxis(float AxisValue)
 void AMarve::Move_YAxis(float AxisValue)
 {
 	CurrentVelocity.Y = FMath::Clamp(AxisValue, -1.0f, 1.0f) * Speed;
+}
+
+void AMarve::DestroyAllVikings()
+{
+	ALitenViking* LitenVikingReference = nullptr;
+	AStorViking* StorVikingReference = nullptr;
+	AVikingSpawner* VikingSpawnerReference = nullptr;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALitenViking::StaticClass(), FoundLitenViking);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStorViking::StaticClass(), FoundStorViking);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AVikingSpawner::StaticClass(), FoundVikingSpawner);
+
+	NumberOfLitenViking = FoundLitenViking.Num() - 1;
+	NumberOfStorViking = FoundStorViking.Num() - 1;
+	NumberOfSpawner = FoundVikingSpawner.Num() - 1;
+
+	if (NumberOfLitenViking > 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Destroying all vikings"))
+		for (int i = 0; i <= NumberOfLitenViking; i++)
+		{
+			LitenVikingReference = Cast<ALitenViking>(FoundLitenViking[i]);
+			LitenVikingReference->Destroy();
+		}
+	}
+
+	if (NumberOfStorViking > 0)
+	{
+		for (int i = 0; i <= NumberOfStorViking; i++)
+		{
+			StorVikingReference = Cast<AStorViking>(FoundStorViking[i]);
+			StorVikingReference->Destroy();
+		}
+	}
+
+	if (NumberOfSpawner > 0)
+	{
+		for (int i = 0; i <= NumberOfSpawner; i++)
+		{
+			VikingSpawnerReference = Cast<AVikingSpawner>(FoundVikingSpawner[i]);
+			VikingSpawnerReference->GameWon();
+		}
+	}
+	EnemyCount = 0;
 }

@@ -90,3 +90,8 @@ void AStorViking::Death()
 	this->Destroy();
 	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->DecreaseViking();
 }
+
+void AStorViking::GameWon()
+{
+	this->Destroy();
+}

@@ -35,6 +35,7 @@ public:
 	virtual void RotateToLiv(AActor* LivReference);
 	virtual void HitByRock();
 	virtual void Death();
+	void GameWon();
 
 private:
 	
@@ -55,11 +56,11 @@ private:
 		float Speed = 150.f;
 
 	UPROPERTY(EditAnywhere)
-		int Health = 140;
+		int Health = 2;
 	
 	// Sets the damage viking takes from rocks
 	UPROPERTY(EditAnywhere)
-		int DamageByRock = 70;
+		int DamageByRock = 1;
 
 	bool CanWalk;
 };

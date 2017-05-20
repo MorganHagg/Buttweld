@@ -7,6 +7,7 @@
 #include "Ammo.h"
 #include "Candy.h"
 #include "Coin.h"
+#include "VikingSpawner.h"
 #include "Marve.generated.h"
 
 UCLASS()
@@ -34,10 +35,18 @@ public:
 	void IncreaseViking();
 	void DecreaseViking();
 	void IncreaseCoin();
+	void DestroyAllVikings();
+
+	TArray<AActor*> FoundLitenViking;
+	TArray<AActor*> FoundStorViking;
+	TArray<AActor*> FoundVikingSpawner;
+
+	int NumberOfLitenViking;
+	int NumberOfStorViking;
+	int NumberOfSpawner;
 
 	// Rotates Marve towards cursor rotation
 	void RotateWithMouse();
-
 	FVector CurrentVelocity;
 
 	UPROPERTY(EditAnywhere)
@@ -58,26 +67,37 @@ public:
 	// Sets Marves movement speed
 	UPROPERTY(EditAnywhere)
 		float Speed = 200.0f;
-
+	
+	// Sets the delay in secods, between each eligible candy-toss
 	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
 		float candyThrowDelay = 5.0f;
 	
 	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
 		float TimeTillThrow;
 
-	/** Whether or not spawning is enabled */
+	// Whether or not throwing candy is enabled
 	bool bCandyEnabled;
 
-	/** The timer for when to throw the candy */
+	// The timer for when Marve throws a candy
 	float ThrowTime;
+	// DeltaTime which is passable to other functions outside Tick
+	float CurrentTime;
 
 
 	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
 		int32 AmmoCount = 10;
 	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
-		int32 CoinCount = 0;
+		int32 AmmoIncline = 10;
 	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
-		int32 WinAmmount = 30;
+		int32 MaxAmmo = 15;
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		int32 CoinCount = 0;
+	UPROPERTY(BlueprintReadWrite)
+		int32 WinAmmount = 0;
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		int32 WinAmmountLevel1 = 25;
+	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+		int32 WinAmmountLevel2 = 40;
 	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
 		int32 EnemyCount = 0;
 	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)

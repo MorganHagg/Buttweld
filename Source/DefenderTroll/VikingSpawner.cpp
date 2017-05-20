@@ -44,7 +44,7 @@ void AVikingSpawner::Tick(float DeltaTime)
 
 	bool bShouldSpawn = (SpawnTime > SpawnDelay);
 
-	if (bShouldSpawn)
+	if (bShouldSpawn && !IsGameWon)
 	{
 		// TypeSpawner == 1 sets the spawner to spawn LitenViking
 		if (TypeSpawner == 1)
@@ -68,4 +68,9 @@ void AVikingSpawner::Tick(float DeltaTime)
 		}
 	}
 
+}
+
+void AVikingSpawner::GameWon()
+{
+	IsGameWon = true;
 }
