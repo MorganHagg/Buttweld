@@ -1,10 +1,15 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #include "DefenderTroll.h"
 #include "VikingSpawner.h"
 #include "StorViking.h"
 #include "LitenViking.h"
 
+
+// Sets default values
 AVikingSpawner::AVikingSpawner()
 {
+	// Set this actor to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
@@ -16,6 +21,7 @@ AVikingSpawner::AVikingSpawner()
 	SpawnDelay = GetRandomSpawnDelay();
 }
 
+// Called when the game starts or when spawned
 void AVikingSpawner::BeginPlay()
 {
 	Super::BeginPlay();
@@ -28,10 +34,12 @@ float AVikingSpawner::GetRandomSpawnDelay()
 }
 
 
+// Called every frame
 void AVikingSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Always add delta time to our Spawn Time
 	SpawnTime += DeltaTime;
 
 	bool bShouldSpawn = (SpawnTime > SpawnDelay);
@@ -59,6 +67,7 @@ void AVikingSpawner::Tick(float DeltaTime)
 			GetWorld()->SpawnActor<AStorViking>(StorVikingEnemy, Location, FRotator::ZeroRotator);
 		}
 	}
+
 }
 
 void AVikingSpawner::GameWon()

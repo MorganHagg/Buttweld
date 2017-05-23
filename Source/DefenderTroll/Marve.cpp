@@ -1,12 +1,19 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #include "DefenderTroll.h"
 #include "Marve.h"
 
+// Sets default values
 AMarve::AMarve()
 {
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 	// Set the pawn to be controlled by player 1
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+
+	// Defines the visible component of the hitbox
+	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
+	OurVisibleComponent->SetupAttachment(RootComponent);
 
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
@@ -30,9 +37,6 @@ void AMarve::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	RotateWithMouse();
-
-	// Adds a timer between each time Marve can throw candy
 	CurrentTime += DeltaTime;
 	if ((ThrowTime + candyThrowDelay) < CurrentTime)
 	{
@@ -42,6 +46,7 @@ void AMarve::Tick(float DeltaTime)
 	{
 		bCandyEnabled = false;
 		TimeTillThrow = (candyThrowDelay + ThrowTime) - CurrentTime;
+		//UE_LOG(LogTemp, Warning, TEXT("Marve can't throw candy yet. Time till throw: %f"), this->ThrowTime);
 	}
 
 	if (!CurrentVelocity.IsZero())
@@ -56,7 +61,7 @@ void AMarve::Tick(float DeltaTime)
 		Idle = true;
 		Walking = false;
 	}
-
+	RotateWithMouse();
 	if (CoinCount >= WinAmmount)
 	{
 		GameWon = true;
@@ -106,13 +111,14 @@ void AMarve::RotateWithMouse()
 
 }
 
-void AMarve::SetupPlayerInputComponent(class UInputComponent* inputComponent)
+// Called to bind functionality to input
+void AMarve::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
-	Super::SetupPlayerInputComponent(inputComponent);
-	inputComponent->BindAxis("Move_X", this, &AMarve::Move_XAxis);
-	inputComponent->BindAxis("Move_Y", this, &AMarve::Move_YAxis);
-	inputComponent->BindAction("Throw", IE_Pressed, this, &AMarve::Throw);
-	inputComponent->BindAction("Candy", IE_Pressed, this, &AMarve::CandyThrow);
+	Super::SetupPlayerInputComponent(InputComponent);
+	InputComponent->BindAxis("Move_X", this, &AMarve::Move_XAxis);
+	InputComponent->BindAxis("Move_Y", this, &AMarve::Move_YAxis);
+	InputComponent->BindAction("Throw", IE_Pressed, this, &AMarve::Throw);
+	InputComponent->BindAction("Candy", IE_Pressed, this, &AMarve::CandyThrow);
 }
 
 void AMarve::Throw()

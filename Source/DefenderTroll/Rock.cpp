@@ -1,23 +1,30 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #include "DefenderTroll.h"
 #include "Rock.h"
 
+
+// Sets default values
 ARock::ARock()
 {
+	// Set Bullets to call Tick function every frame
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Creates hitbox
+	// Defines hitbox
 	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
 
-	// Creates visible component of Rocks
+	// Defines visible component of Rocks
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
+
 }
 
+// Called when the game starts
 void ARock::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Sets the collisionbox to the rootcomponent
+	//Checks if there is overlap
 	CollisionBox = this->FindComponentByClass<USphereComponent>();
 
 	// Checks if rock has collided with Enemy
@@ -46,9 +53,11 @@ void ARock::BeginPlay()
 			CursorToWorld->SetWorldRotation(CursorR);
 		}
 		CursorLocation = Hit.Location;
-		RockDirection = FVector(CursorLocation.X, CursorLocation.Y, 00.f);
+		RockDestination = FVector(CursorLocation.X, CursorLocation.Y, 00.f);
 	}
 }
+
+
 
 // Defines rock Movement
 void ARock::Tick(float DeltaTime)
@@ -59,7 +68,6 @@ void ARock::Tick(float DeltaTime)
 	SetActorLocation(NewLocation);
 	DistanceTraveled += Speed * DeltaTime;
 
-	// Destorys the rock if it travels too far
 	if (DistanceTraveled >= ThrowDistance)
 	{
 		Destroy();

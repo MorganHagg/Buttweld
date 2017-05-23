@@ -1,14 +1,20 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #include "DefenderTroll.h"
 #include "Candy.h"
 
+
+// Sets default values
 ACandy::ACandy()
 {
+ 	// Set this actor to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	CollisionBox = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
 	RootComponent = CollisionBox;
 	CollisionBox->bGenerateOverlapEvents = true;
 }
 
+// Called when the game starts or when spawned
 void ACandy::BeginPlay()
 {
 	Super::BeginPlay();
@@ -35,6 +41,7 @@ void ACandy::BeginPlay()
 	ThrowDistance = sqrt(pow((CursorLocation.X - CurrentLocation.X), 2) + pow((CursorLocation.Y - CurrentLocation.Y), 2));
 }
 
+// Called every frame
 void ACandy::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );

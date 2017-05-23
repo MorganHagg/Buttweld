@@ -1,17 +1,22 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #include "DefenderTroll.h"
 #include "Liv.h"
 #include "LitenViking.h"
 
+// Sets default values
 ALitenViking::ALitenViking()
 {
-	// Creates hitbox
+	// Hitbox
 	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	// Visible component
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
+	// Set this actor to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+// Called when the game starts or when spawned
 void ALitenViking::BeginPlay()
 {
 	Super::BeginPlay();
@@ -19,10 +24,9 @@ void ALitenViking::BeginPlay()
 	isDead = false;
 }
 
+// Called every frame
 void ALitenViking::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
 	// Finds all instances of Liv, and sets the "LivReference" to the first ([0]) actor found
 	TArray<AActor*> FoundActors;
 	ALiv* LivReference = nullptr;
@@ -31,7 +35,7 @@ void ALitenViking::Tick(float DeltaTime)
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALiv::StaticClass(), FoundActors);
 		LivReference = Cast<ALiv>(FoundActors[0]);
 	}
-
+	Super::Tick(DeltaTime);
 	FVector NewLocation = GetActorLocation();
 	FVector LivLocation = LivReference->GetActorLocation();
 	RadiusToLiv = sqrt(pow((LivLocation.X - NewLocation.X), 2) + pow((LivLocation.Y - NewLocation.Y), 2));
@@ -53,6 +57,17 @@ void ALitenViking::Tick(float DeltaTime)
 	SetActorLocation(NewLocation);
 	MoveDirection = LivReference->GetActorLocation() - GetActorLocation();
 	MoveDirection.Normalize();
+
+	///Får ikke dette til å funke, fordi "TimeOfDeath" oppdateres kontinuerlig
+	//CurrentTime += DeltaTime;
+	//if (isDead == true)
+	//{
+	//	CanWalk = false;
+	//	if ((DeltaTime - TimeOfDeath) > DeathAnimationTimer)
+	//	{
+	//		this->Destroy();
+	//	}
+	//}
 }
 
 void ALitenViking::RotateToLiv(AActor* LivReference)
@@ -76,6 +91,8 @@ void ALitenViking::HitByRock()
 	}
 	 if (Health <= 0 && (!isDead))
 	{
+		 ///Får ikke dette til å funke, fordi "TimeOfDeath" oppdateres kontinuerlig
+		 //TimeOfDeath = CurrentTime;
 		 Death();
 	}
 }

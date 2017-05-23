@@ -1,3 +1,5 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 #include "GameFramework/Actor.h"
@@ -11,11 +13,16 @@ class DEFENDERTROLL_API ARock : public AActor
 	GENERATED_BODY()
 	
 public:	
+	// Sets default values for this actor's properties
 	ARock();
 
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	// Make editable anywhere
 	UPROPERTY(EditAnywhere)
 		USceneComponent* OurVisibleComponent;
 
@@ -34,8 +41,7 @@ public:
 			AActor *OtherActor, UPrimitiveComponent *OtherComponent,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 	
-	// Holds the vector between Marves position and the mouse cursors position at the time of a rock-throw
-	FVector RockDirection;
+	FVector RockDestination;
 
 	UPROPERTY(EditAnywhere)
 		float ThrowDistance = 800.0f;

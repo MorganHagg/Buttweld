@@ -1,3 +1,5 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 #include "GameFramework/Actor.h"
 #include "Coin.h"
@@ -14,9 +16,13 @@ class DEFENDERTROLL_API ALiv : public AActor
 
 		
 public:
+	// Sets default values for this actor's properties
 	ALiv();
 
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
 	void RotateToCoin();
@@ -41,13 +47,14 @@ public:
 	int NumberOfLitenViking;
 	int NumberOfStorViking;
 
-	// Initialising for collisionbox
+	// Initialising for collision and overlap
 	UShapeComponent* CollisionBox = nullptr;
 
 	// Defines visible properties for Liv
 	UPROPERTY(EditAnywhere)
 		USceneComponent* OurVisibleComponent;
 
+	// Defines direction for Liv
 	UPROPERTY(BlueprintReadWrite)
 		FVector MoveDirection = FVector(1.f, 0.f, 0.f);
 
@@ -100,8 +107,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		float StandStillMargine = 5.0f;
 
+	bool CanWalk;
+
 	UPROPERTY(BlueprintReadWrite)
 		bool pickingStuff;
-
-	bool CanWalk;
 };
