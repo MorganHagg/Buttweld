@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "GameFramework/Actor.h"
@@ -13,13 +11,9 @@ class DEFENDERTROLL_API ALitenViking : public AActor
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	ALitenViking();
 
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
 	// Defines visible properties for Liten Viking
@@ -29,7 +23,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class ACoin> Coin_BP;
 	
-	// Defines direction for Vikings
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FVector MoveDirection;
 
@@ -61,14 +54,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		int DamageByRock = 1;
 
-	bool CanWalk;
-
-	///Får ikke dette til å funke, fordi "TimeOfDeath" oppdateres kontinuerlig
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float DeathAnimationTimer = 1.0f;
-	float CurrentTime;
-	float TimeOfDeath;*/
 	UPROPERTY(BlueprintReadWrite)
 		bool isDead;
-
+	
+	bool CanWalk;
 };

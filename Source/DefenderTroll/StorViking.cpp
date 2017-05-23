@@ -1,31 +1,29 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "DefenderTroll.h"
 #include "Liv.h"
 #include "StorViking.h"
 
-// Sets default values
 AStorViking::AStorViking()
 {
-	// Hitbox
+	// Creates hitbox
 	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	// Visible component
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 	OurVisibleComponent->SetupAttachment(RootComponent);
-	// Set this actor to call Tick() every frame.
+
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
 void AStorViking::BeginPlay()
 {
 	Super::BeginPlay();
 	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->IncreaseViking();
+	isDead = false;
 }
 
-// Called every frame
 void AStorViking::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
+
 	// Finds all instances of Liv, and sets the "LivReference" to the first ([0]) actor found
 	TArray<AActor*> FoundActors;
 	ALiv* LivReference = nullptr;
@@ -34,7 +32,6 @@ void AStorViking::Tick(float DeltaTime)
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALiv::StaticClass(), FoundActors);
 		LivReference = Cast<ALiv>(FoundActors[0]);
 	}
-	Super::Tick(DeltaTime);
 	FVector NewLocation = GetActorLocation();
 	FVector LivLocation = LivReference->GetActorLocation();
 	RadiusToLiv = sqrt(pow((LivLocation.X - NewLocation.X), 2) + pow((LivLocation.Y - NewLocation.Y), 2));

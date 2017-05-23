@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "GameFramework/Actor.h"
@@ -11,12 +9,10 @@ class DEFENDERTROLL_API AVikingSpawner : public AActor
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AVikingSpawner();
 
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
-	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 	
 	void GameWon();
@@ -31,11 +27,11 @@ public:
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere = nullptr;
 
-	/** Minimum spawn delay*/
+	// Minimum spawn delay
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawning)
 		float SpawnDelayRangeLow = 1.0f;
 
-	/** Maximum spawn delay */
+	// Maximum spawn delay
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawning)
 		float SpawnDelayRangeHigh = 5.0f;
 
@@ -43,15 +39,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawning)
 		int TypeSpawner = 1;
 
-	/** Whether or not spawning is enabled */
+	// Whether or not spawning is enabled
 	bool bSpawningEnabled;
 
-	/** Calculates a random spawn delay */
+	// Calculates a random spawn delay
 	float GetRandomSpawnDelay();
 
-	/** The current spawn delay */
+	// The current spawn delay
 	float SpawnDelay;
 
-	/** The timer for when to spawn the pickup */
+	// The timer for when to spawn the pickup
 	float SpawnTime;
 };

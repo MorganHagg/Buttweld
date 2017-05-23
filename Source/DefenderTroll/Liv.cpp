@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "DefenderTroll.h"
 #include "Liv.h"
 #include "coin.h"
@@ -7,10 +5,8 @@
 #include "StorViking.h"
 #include "LitenViking.h"
 
-// Sets default values
 ALiv::ALiv()
 {
-	// Set this actor to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	// Hitbox
 	RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
@@ -19,10 +15,10 @@ ALiv::ALiv()
 	OurVisibleComponent->SetupAttachment(RootComponent);
 }
 
-// Called when the game starts or when spawned
 void ALiv::BeginPlay()
 {
 	Super::BeginPlay();
+
 	//Checks if there is overlap
 	CollisionBox = this->FindComponentByClass<USphereComponent>();
 	if (CollisionBox)
@@ -38,11 +34,10 @@ void ALiv::BeginPlay()
 	pickingStuff = false;
 }
 
-// TODO: Fiks bug hvor liv beveger seg bakover, om hun "unngår marve" og det spawner en coin samtidig
-// Called every frame
 void ALiv::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	FVector LivDestination;
 	FVector NewLocation = GetActorLocation();
 	FVector MarveLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
@@ -110,7 +105,6 @@ void ALiv::Tick(float DeltaTime)
 	MoveDirection.Normalize();
 }
 
-// Checks for all vikings within a parameter to Liv. If there are any: Increase Scare-o-meter
 void ALiv::CheckForViking()
 {
 	ALitenViking* LitenVikingReference = nullptr;
@@ -139,7 +133,7 @@ void ALiv::CheckForViking()
 			}
 		}
 	}
-	// Checks if there are any vikings to save computing power, since the calculation is demanding
+	// Checks if there are any vikings to save computing power, since the phytagoras-calculation is demanding
 	if (NumberOfStorViking > 0)
 	{
 		for (int i = 0; i <= NumberOfStorViking; i++)
