@@ -55,7 +55,8 @@ public:
 		USceneComponent* OurVisibleComponent;
 
 	// Defines direction for Liv
-	FVector MoveDirection = FVector(1.f, 0.f, 0.f);
+	UPROPERTY(BlueprintReadWrite)
+		FVector MoveDirection = FVector(1.f, 0.f, 0.f);
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -107,4 +108,7 @@ public:
 		float StandStillMargine = 5.0f;
 
 	bool CanWalk;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool pickingStuff;
 };

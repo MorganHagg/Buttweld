@@ -30,14 +30,13 @@ public:
 		TSubclassOf<class ACoin> Coin_BP;
 	
 	// Defines direction for Vikings
-	FVector MoveDirection = FVector(1.f, 0.f, 0.f);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector MoveDirection;
 
-	virtual void RotateToLiv(AActor* LivReference);
-	virtual void HitByRock();
-	virtual void Death();
+	void RotateToLiv(AActor* LivReference);
+	void HitByRock();
+	void Death();
 	void GameWon();
-
-private:
 	
 	// Reads the current distance from viking to Liv (cm)
 	UPROPERTY(EditAnywhere)
@@ -52,10 +51,10 @@ private:
 		float StandStillMargine = 5.0f;
 
 	// Sets the movement speed of Vikings
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Speed = 150.f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int Health = 2;
 	
 	// Sets the damage viking takes from rocks
@@ -63,4 +62,13 @@ private:
 		int DamageByRock = 1;
 
 	bool CanWalk;
+
+	///Får ikke dette til å funke, fordi "TimeOfDeath" oppdateres kontinuerlig
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float DeathAnimationTimer = 1.0f;
+	float CurrentTime;
+	float TimeOfDeath;*/
+	UPROPERTY(BlueprintReadWrite)
+		bool isDead;
+
 };

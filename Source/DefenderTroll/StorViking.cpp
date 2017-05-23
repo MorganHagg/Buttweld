@@ -42,13 +42,16 @@ void AStorViking::Tick(float DeltaTime)
 	// Rotates the viking to Livs location
 	RotateToLiv(LivReference);
 	// Stops the viking from walking if it's too close to Liv
-	if (RadiusToLiv < MinimumRadius)
+	if (!isDead)
 	{
-		CanWalk = false;
-	}
-	else
-	{
-		CanWalk = true;
+		if (RadiusToLiv < MinimumRadius)
+		{
+			CanWalk = false;
+		}
+		else
+		{
+			CanWalk = true;
+		}
 	}
 	NewLocation += (MoveDirection * Speed * DeltaTime * CanWalk);
 	SetActorLocation(NewLocation);
@@ -76,7 +79,7 @@ void AStorViking::HitByRock()
 	{
 		Health = Health - DamageByRock;
 	}
-	if (Health < 1)
+	if (Health < 1 && (!isDead))
 	{
 		Death();
 	}
@@ -87,7 +90,7 @@ void AStorViking::Death()
 	FVector Location = GetActorLocation();
 	UE_LOG(LogTemp, Warning, TEXT("Coin spawned"));
 	GetWorld()->SpawnActor<ACoin>(Coin_BP, Location, FRotator::ZeroRotator);
-	this->Destroy();
+	isDead = true;
 	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->DecreaseViking();
 }
 

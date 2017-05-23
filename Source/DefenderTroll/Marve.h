@@ -47,7 +47,8 @@ public:
 
 	// Rotates Marve towards cursor rotation
 	void RotateWithMouse();
-	FVector CurrentVelocity;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector CurrentVelocity;
 
 	UPROPERTY(EditAnywhere)
 		USceneComponent* OurVisibleComponent;
@@ -65,7 +66,7 @@ public:
 		class UDecalComponent* CursorToWorld;
 
 	// Sets Marves movement speed
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Speed = 200.0f;
 	
 	// Sets the delay in secods, between each eligible candy-toss
@@ -100,8 +101,14 @@ public:
 		int32 WinAmmountLevel2 = 40;
 	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
 		int32 EnemyCount = 0;
-	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool GameWon;
-	UPROPERTY(Category = UserInterface, EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool GameLost;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool Walking;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool Idle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool isThrowing;
 };

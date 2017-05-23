@@ -35,6 +35,7 @@ void ALiv::BeginPlay()
 	}
 	CoinExist = false;
 	CandyExist = false;
+	pickingStuff = false;
 }
 
 // TODO: Fiks bug hvor liv beveger seg bakover, om hun "unngår marve" og det spawner en coin samtidig
@@ -240,6 +241,7 @@ void ALiv::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActo
 		Cast<ACandy>(OtherActor)->Destroy();
 		UE_LOG(LogTemp, Error, TEXT("Liv picked up a candy"));
 		CandyExist = false;
+		pickingStuff = true;
 	}
 
 	if (OtherActor->IsA(ACoin::StaticClass()))
@@ -248,5 +250,6 @@ void ALiv::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActo
 		Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->IncreaseCoin();
 		UE_LOG(LogTemp, Error, TEXT("Liv picked up a coin"));
 		CoinExist = false;
+		pickingStuff = true;
 	}
 }

@@ -27,7 +27,7 @@ void AMarve::BeginPlay()
 	// Show windows-cursor ingame
 	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
 	GameWon = false;
-
+	isThrowing = false;
 	// Sets the Candy-Cooldown to 0 at the start of the game
 	ThrowTime -= candyThrowDelay;
 }
@@ -36,7 +36,7 @@ void AMarve::BeginPlay()
 void AMarve::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	CurrentTime += DeltaTime;
 	if ((ThrowTime + candyThrowDelay) < CurrentTime)
 	{
@@ -51,8 +51,15 @@ void AMarve::Tick(float DeltaTime)
 
 	if (!CurrentVelocity.IsZero())
 	{
+		Idle = false;
+		Walking = true;
 		FVector NewLocation = GetActorLocation() + (CurrentVelocity * DeltaTime);
 		SetActorLocation(NewLocation);
+	}
+	else
+	{
+		Idle = true;
+		Walking = false;
 	}
 	RotateWithMouse();
 	if (CoinCount >= WinAmmount)
@@ -119,6 +126,7 @@ void AMarve::Throw()
 	//Spawn one bullet if we have ammo
 	if (AmmoCount > 0)
 	{
+		isThrowing = true;
 		GetWorld()->SpawnActor<ARock>(Rock_BP, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 		AmmoCount--;
 	}
@@ -133,6 +141,7 @@ void AMarve::CandyThrow()
 	UWorld* World = GetWorld();
 	if (bCandyEnabled)
 	{
+		isThrowing = true;
 		GetWorld()->SpawnActor<ACandy>(Candy_BP, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 		ThrowTime = CurrentTime; // Get the current time at throw-time
 	}

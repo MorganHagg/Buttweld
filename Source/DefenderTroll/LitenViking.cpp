@@ -21,6 +21,7 @@ void ALitenViking::BeginPlay()
 {
 	Super::BeginPlay();
 	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->IncreaseViking();
+	isDead = false;
 }
 
 // Called every frame
@@ -38,22 +39,35 @@ void ALitenViking::Tick(float DeltaTime)
 	FVector NewLocation = GetActorLocation();
 	FVector LivLocation = LivReference->GetActorLocation();
 	RadiusToLiv = sqrt(pow((LivLocation.X - NewLocation.X), 2) + pow((LivLocation.Y - NewLocation.Y), 2));
-
 	// Rotates the viking to Livs location
 	RotateToLiv(LivReference);
 	// Stops the viking from walking if it's too close to Liv
-	if (RadiusToLiv < MinimumRadius)
+	if (!isDead)
 	{
-		CanWalk = false;
-	}
-	else
-	{
-		CanWalk = true;
+		if (RadiusToLiv < MinimumRadius)
+		{
+			CanWalk = false;
+		}
+		else
+		{
+			CanWalk = true;
+		}
 	}
 	NewLocation += (MoveDirection * Speed * DeltaTime * CanWalk);
 	SetActorLocation(NewLocation);
 	MoveDirection = LivReference->GetActorLocation() - GetActorLocation();
 	MoveDirection.Normalize();
+
+	///Får ikke dette til å funke, fordi "TimeOfDeath" oppdateres kontinuerlig
+	//CurrentTime += DeltaTime;
+	//if (isDead == true)
+	//{
+	//	CanWalk = false;
+	//	if ((DeltaTime - TimeOfDeath) > DeathAnimationTimer)
+	//	{
+	//		this->Destroy();
+	//	}
+	//}
 }
 
 void ALitenViking::RotateToLiv(AActor* LivReference)
@@ -75,8 +89,10 @@ void ALitenViking::HitByRock()
 	{
 		Health = Health - DamageByRock;
 	}
-	 if (Health <= 0)
+	 if (Health <= 0 && (!isDead))
 	{
+		 ///Får ikke dette til å funke, fordi "TimeOfDeath" oppdateres kontinuerlig
+		 //TimeOfDeath = CurrentTime;
 		 Death();
 	}
 }
@@ -86,7 +102,7 @@ void ALitenViking::Death()
 	FVector Location = GetActorLocation();
 	UE_LOG(LogTemp, Warning, TEXT("Coin spawned"));
 	GetWorld()->SpawnActor<ACoin>(Coin_BP, Location, FRotator::ZeroRotator);
-	this->Destroy();
+	isDead = true;
 	Cast<AMarve>(GetWorld()->GetFirstPlayerController()->GetPawn())->DecreaseViking();
 }
 
