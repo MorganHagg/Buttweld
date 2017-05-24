@@ -69,7 +69,7 @@ public:
 
 	// Reads the current value of scare-o-meter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ScareOMeter)
-		float CurrentScareOMeter = 0.0f;
+		float CurrentScareOMeter = 0.01f;
 	
 	// Sets the value the scare-o-meter drops by every frame
 	UPROPERTY(EditAnywhere)
